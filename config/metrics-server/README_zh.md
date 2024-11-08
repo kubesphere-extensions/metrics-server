@@ -94,5 +94,5 @@ Metrics Server 资源使用取决于多个独立的维度，创建了一个 [可
 您可以通过运行以下命令获取 Metrics Server 配置标志的完整列表：
 
 ```shell
-docker run --rm registry.k8s.io/metrics-server/metrics-server:v0.7.0 --help
+docker run --rm registry.k8s.io/metrics-server/metrics-server:v0.7.2 --help
 ```

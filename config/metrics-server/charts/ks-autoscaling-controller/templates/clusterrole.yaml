@@ -1,0 +1,52 @@
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "ks-autoscaling-controller.fullname" . }}
+  labels:
+    {{- include "ks-autoscaling-controller.labels" . | nindent 4 }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - statefulsets
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - '*'
+{{- if has "--enable-keda" .Values.extraArgs }}
+- apiGroups:
+  - "keda.sh"
+  resources:
+  - scaledobjects
+  verbs:
+  - '*'
+{{- end -}}
+{{- if has "--enable-hpa" .Values.extraArgs }}
+- apiGroups:
+  - "autoscaling"
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - '*'
+{{- end -}}
+{{- end -}}
