@@ -14,9 +14,9 @@ env:
   EXTENSION_NAME: metrics-server
   FRONTEND_PATH: modules/web
 
-  IMAGE_REGISTRY: registry.cn-beijing.aliyuncs.com
-  IMAGE_NAMESAPCE: kse
-  IMAGE_NAME: metrics-server-extension-frontend
+  IMAGE_REGISTRY: docker.io
+  IMAGE_NAMESPACE: kubesphere
+  IMAGE_NAME: metrics-server-frontend
 
 jobs:
   build-extension:
@@ -62,5 +62,5 @@ jobs:
         with:
           context: ${{ env.FRONTEND_EXTENSION_PATH }}
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESAPCE }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
           push: true
