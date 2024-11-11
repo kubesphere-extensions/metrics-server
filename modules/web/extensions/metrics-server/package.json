@@ -1,0 +1,12 @@
+{
+  "name": "metrics-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "homepage": "",
+  "author": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ]
+}
