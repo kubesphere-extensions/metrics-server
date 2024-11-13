@@ -48,9 +48,10 @@ metrics-server:
     enabled: false
 
 frontend:
+  enabled: true
   image:
     registry: docker.io
-    repository: library/nginx
+    repository: kubesphere/metrics-server-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "1.27"  
+    tag: "main"  

@@ -13,7 +13,7 @@ image:
   repository: kubesphere/metrics-server-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "main"
 
 nameOverride: ""
 fullnameOverride: ""
