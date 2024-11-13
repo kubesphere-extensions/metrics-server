@@ -12,7 +12,7 @@ Please do not delete this line of version tag
 
 ### Misc
 
-- metrics-server upgraded from v0.4.2 to v0.7.0.
+- metrics-server upgraded from v0.7.0 to v0.7.2.
 
 <!---
 Please do not delete this line of version tag
