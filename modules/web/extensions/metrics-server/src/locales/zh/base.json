@@ -27,5 +27,6 @@
   "metricsServer.field.project": "项目",
   "metricsServer.editYaml": "编辑 YAML",
   "metricsServer.delete": "删除",
-  "metricsServer.modal.create.title": "创建 Pod 水平自动扩缩"
+  "metricsServer.modal.create.title": "创建 Pod 水平自动扩缩",
+  "metricsServer.namespace": "项目"
 }

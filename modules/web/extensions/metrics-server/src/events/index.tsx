@@ -1,4 +1,4 @@
-import { Pen, Stretch, SmcDuotone } from '@kubed/icons';
+import { SmcDuotone } from '@kubed/icons';
 import { pick } from 'lodash';
 import { default as React } from 'react';
 import { HpaModal } from '../components/Hpa';
@@ -12,7 +12,7 @@ export const events = {
     ) => {
       return {
         ...point,
-        icon: <Stretch size={40} />,
+        icon: <SmcDuotone size={40} />,
       };
     },
     'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server': (
@@ -21,7 +21,7 @@ export const events = {
     ) => {
       return {
         ...point,
-        icon: <Stretch size={40} />,
+        icon: <SmcDuotone size={40} />,
       };
     },
     'pageAction://pageAction.cluster.deployments.detail.metrics-server': (
@@ -39,8 +39,6 @@ export const events = {
       modalDispatch: any,
       context: any,
     ) => {
-      console.log('context', context);
-
       modalDispatch.show('open.workspace.hpa', {
         modal: HpaModal,
         detail: context.detail,

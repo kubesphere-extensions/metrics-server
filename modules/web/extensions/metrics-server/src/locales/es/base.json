@@ -28,5 +28,6 @@
   "metricsServer.field.project": "Proyecto",
   "metricsServer.editYaml": "Editar YAML",
   "metricsServer.delete": "Eliminar",
-  "metricsServer.modal.create.title": "Crear escalado horizontal de Pod"
+  "metricsServer.modal.create.title": "Crear escalado horizontal de Pod",
+  "metricsServer.namespace": "Proyecto"
 }
