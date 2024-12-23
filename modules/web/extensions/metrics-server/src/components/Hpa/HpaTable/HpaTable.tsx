@@ -23,6 +23,7 @@ import store from '../../../stores/hpa';
 import { HpaCreateModal } from '../HpaCreateModal/HpaCreateModal';
 import { HpaStatus } from '../HpaStatus/HpaStatus';
 import { HpaEditModal } from '../HpaEditModal/HpaEditModal';
+import { transformBytes } from '../../../utils';
 
 const { useQueryList } = store;
 
@@ -278,7 +279,12 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => {
           const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
-          return <Field value={memoryTargetValue} label={`当前：${memoryCurrentValue}`} />;
+          return (
+            <Field
+              value={memoryTargetValue}
+              label={`${t('metricsServer.current')}：${transformBytes(memoryCurrentValue)}`}
+            />
+          );
         },
       },
       {

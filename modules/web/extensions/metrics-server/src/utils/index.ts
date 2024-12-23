@@ -143,3 +143,22 @@ export const coreUnitTS = (value: number, unit: string) => {
 
   return unitTxt;
 };
+
+export const transformBytes = (value: number) => {
+  const units = ['Bytes', 'Ki', 'Mi', 'Gi', 'Ti'];
+  const base = 1024;
+  let index = 0;
+
+  // Continue conversion while value >= 1024 and there are larger units available
+  while (value >= base && index < units.length - 1) {
+    value /= base;
+    index++;
+  }
+
+  // For very small values (less than 1), return 0
+  if (value < 1 && index === 0) {
+    return '0';
+  }
+
+  return `${value.toFixed(2)}${units[index]}`;
+};

@@ -28,5 +28,6 @@
   "metricsServer.field.project": "Project",
   "metricsServer.editYaml": "Edit YAML",
   "metricsServer.delete": "Delete",
-  "metricsServer.modal.create.title": "Create Pod Horizontal Auto Scaling"
+  "metricsServer.modal.create.title": "Create Pod Horizontal Auto Scaling",
+  "metricsServer.namespace": "Project"
 }
