@@ -7,7 +7,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     // "isolatedModules": false,
-    "noEmit": false
+    "noEmit": false,
+    "outDir": "./dist"
   },
   "include": ["extensions", "types"]
 }
