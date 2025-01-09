@@ -1,14 +1,9 @@
 import React from 'react';
-import { Form, FormItem, Input, Modal, useForm } from '@kubed/components';
-import {
-  BasePathParams,
-  IHpaDetail,
-  hpaStore,
-  memoryFormat,
-  NumberInput,
-} from '@ks-console/shared';
+import { Form, FormItem, Input, Modal, useForm, notify } from '@kubed/components';
+import { BasePathParams, IHpaDetail, memoryFormat, NumberInput } from '@ks-console/shared';
 import styled from 'styled-components';
 import { merge } from 'lodash';
+import { useEditMutation } from '../../../data/useEditMutation';
 
 type HpaFormModalProps = {
   detail?: any;
@@ -33,7 +28,6 @@ const HpaFormInner = styled.div`
   border-radius: 4px;
 `;
 
-const { usePatchHpaMutation } = hpaStore;
 export const HpaEditModal = (props: HpaFormModalProps) => {
   const { detail, params, onOk, onCancel, open, hpaDetail } = props;
 
@@ -79,7 +73,7 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
     },
   });
 
-  const { mutate: patchHpa } = usePatchHpaMutation({
+  const { mutate: patchHpa } = useEditMutation({
     cluster,
     name,
     namespace,
@@ -93,12 +87,16 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
     });
   };
 
-  const onEdit = async (formValues: any) => {
-    await patchHpa(formValues);
-
-    onOk();
-    form.resetFields();
+  const onEdit = (formValues: any) => {
+    patchHpa(formValues, {
+      onSuccess: () => {
+        onOk();
+        form.resetFields();
+        notify.success(t('metricsServer.updateSuccess'));
+      },
+    });
   };
+
   return (
     <Modal
       title={t('metricsServer.edit')}
@@ -109,7 +107,6 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
       }}
       onOk={() => {
         onFinish();
-        onOk();
       }}
     >
       <HpaFormWrapper>
@@ -120,7 +117,7 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
               name={['metadata', 'name']}
               rules={[{ required: true }]}
             >
-              <Input />
+              <Input disabled />
             </FormItem>
             <FormItem
               label={t('metricsServer.namespace')}

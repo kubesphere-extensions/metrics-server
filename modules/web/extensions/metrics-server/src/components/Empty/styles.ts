@@ -8,7 +8,7 @@ export const EmptyWrapper = styled.div`
   gap: 20px;
 `;
 
-export const EmptyIcon = styled.div`
+export const EmptyIcon = styled.div<{ children?: React.ReactNode }>`
   display: flex;
   flex-direction: column;
   justify-content: center;

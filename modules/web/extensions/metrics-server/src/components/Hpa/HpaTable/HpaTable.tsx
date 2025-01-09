@@ -8,23 +8,23 @@ import {
   ProjectAliasName,
   tableState2Query,
   useBatchActions,
-  useCommonActions,
   useItemActions,
   useModalAction,
   useTableActions,
 } from '@ks-console/shared';
-import { Card, DataTable, Field } from '@kubed/components';
+import { Card, DataTable, Field, notify } from '@kubed/components';
 import { Pen, Trash, SmcDuotone } from '@kubed/icons';
 import { ColumnDef, Table } from '@tanstack/react-table';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Empty } from '../../Empty/Empty';
-import store from '../../../stores/hpa';
 import { HpaCreateModal } from '../HpaCreateModal/HpaCreateModal';
 import { HpaStatus } from '../HpaStatus/HpaStatus';
 import { HpaEditModal } from '../HpaEditModal/HpaEditModal';
-
-const { useQueryList } = store;
+import { transformBytes } from '../../../utils';
+import { useHpaList } from '../../../data/useHpaList';
+import { useDelete } from '../../../hooks/useDelete';
+import { useEditYaml } from '../../../hooks/useEditYaml';
 
 const Container = styled.div`
   table .table-cell {
@@ -89,7 +89,7 @@ export const HpaTable = (props: HpaTableProps) => {
   }, [state, cluster, namespace, kind, name]);
 
   const { step, nextStep } = useSteps(steps);
-  const { data, isLoading, isFetching, isFetched, refetch } = useQueryList(query, {
+  const { data, isLoading, isFetching, isFetched, refetch } = useHpaList(query, {
     enabled: !!cluster && !!namespace && !!kind && !!name,
     refetchInterval: step * 1000,
     onSettled: () => {
@@ -108,18 +108,13 @@ export const HpaTable = (props: HpaTableProps) => {
 
   const tableRef = React.useRef<Table<RecordType>>();
 
-  const { editYaml, del } = useCommonActions({
-    store: store,
-    params: {
-      cluster,
-      namespace,
-    },
-    callback: (callBackType: string) => {
-      if (callBackType === 'delete') {
-        tableRef.current?.resetRowSelection();
-      }
-      refetch();
-    },
+  const { editYaml } = useEditYaml({
+    cluster,
+    namespace,
+  });
+  const { deleteHpa } = useDelete({
+    cluster,
+    namespace,
   });
 
   const renderBatchActions = useBatchActions({
@@ -132,10 +127,17 @@ export const HpaTable = (props: HpaTableProps) => {
       {
         key: 'delete',
         text: t('DELETE'),
+        action: 'delete',
         onClick: () => {
           const resource = tableRef.current?.getSelectedRowModel()?.rows.map(row => row.original!);
-          const k8sVersion = globals.clusterConfig?.[cluster!]?.k8sVersion;
-          del({ resource, type: 'metricsServer.title' }, k8sVersion);
+          deleteHpa({
+            resource,
+            type: 'metricsServer.title',
+            onSuccess: () => {
+              tableRef.current?.resetRowSelection();
+              refetch();
+            },
+          });
         },
         props: {
           color: 'error',
@@ -145,6 +147,7 @@ export const HpaTable = (props: HpaTableProps) => {
   });
 
   const renderItemActions = useItemActions({
+    authKey: module,
     params: {
       cluster,
       namespace,
@@ -152,6 +155,7 @@ export const HpaTable = (props: HpaTableProps) => {
     actions: [
       {
         key: 'edit',
+        action: 'edit',
         icon: <Pen />,
         text: t('metricsServer.edit'),
         onClick: (_, record) => {
@@ -169,27 +173,40 @@ export const HpaTable = (props: HpaTableProps) => {
       },
       {
         key: 'editYaml',
+        action: 'edit',
         icon: <Pen />,
         text: t('metricsServer.editYaml'),
         onClick: (_, record) => {
-          editYaml(record, globals.clusterConfig?.[cluster!]?.k8sVersion);
+          editYaml({
+            initialValues: record,
+            onSuccess: () => {
+              notify.success(t('metricsServer.updateSuccess'));
+              refetch();
+            },
+          });
         },
       },
       {
         key: 'delete',
+        action: 'delete',
         icon: <Trash />,
         text: t('metricsServer.delete'),
         onClick: (_, record) => {
-          del(
-            { ...record, type: 'metricsServer.title' },
-            globals.clusterConfig?.[cluster!]?.k8sVersion,
-          );
+          deleteHpa({
+            resource: record,
+            type: 'metricsServer.title',
+            onSuccess: () => {
+              tableRef.current?.resetRowSelection();
+              refetch();
+            },
+          });
         },
       },
     ],
   });
 
   const renderTableAction = useTableActions({
+    authKey: module,
     params: {
       cluster,
       namespace,
@@ -197,6 +214,7 @@ export const HpaTable = (props: HpaTableProps) => {
     actions: [
       {
         key: 'create',
+        action: 'create',
         text: t('metricsServer.create'),
         props: {
           color: 'secondary',
@@ -263,7 +281,10 @@ export const HpaTable = (props: HpaTableProps) => {
         cell: info => {
           const { cpuCurrentUtilization = 0, cpuTargetUtilization = 0 } = info.row.original;
           return (
-            <Field value={`${cpuTargetUtilization}%`} label={`当前：${cpuCurrentUtilization}%`} />
+            <Field
+              value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
+              label={`当前：${cpuCurrentUtilization}%`}
+            />
           );
         },
       },
@@ -278,7 +299,12 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => {
           const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
-          return <Field value={memoryTargetValue} label={`当前：${memoryCurrentValue}`} />;
+          return (
+            <Field
+              value={memoryTargetValue}
+              label={`${t('metricsServer.current')}：${transformBytes(memoryCurrentValue)}`}
+            />
+          );
         },
       },
       {

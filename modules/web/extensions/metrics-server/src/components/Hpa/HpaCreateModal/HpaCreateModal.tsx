@@ -69,7 +69,7 @@ export const HpaCreateModal = (props: HpaFormModalProps) => {
 
   const mutateUpdateDeploymentMutation = useUpdateDeploymentMutation({
     onSuccess: () => {
-      notify.success(t('metricsServer.updateSuccess'));
+      notify.success(t('metricsServer.createSuccess'));
     },
   });
 
