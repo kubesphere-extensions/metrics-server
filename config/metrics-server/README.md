@@ -3,8 +3,8 @@
 Metrics Server is a scalable, efficient source of container resource metrics for Kubernetes
 built-in autoscaling pipelines.
 
-Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API]
-for use by [Horizontal Pod Autoscaler] and [Vertical Pod Autoscaler]. Metrics API can also be accessed by `kubectl top`,
+Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API](https://github.com/kubernetes/metrics)
+for use by [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) and [Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/). Metrics API can also be accessed by `kubectl top`,
 making it easier to debug autoscaling pipelines.
 
 Metrics Server is not meant for non-autoscaling purposes. For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. In such cases please collect metrics from Kubelet `/metrics/resource` endpoint directly.
@@ -16,16 +16,13 @@ Metrics Server offers:
 - Resource efficiency, using 1 mili core of CPU and 2 MB of memory for each node in a cluster.
 - Scalable support up to 5,000 node clusters.
 
-<!-- [Metrics API]: https://github.com/kubernetes/metrics
-[Horizontal Pod Autoscaler]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-[Vertical Pod Autoscaler]: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/ -->
 
 ## Use cases
 
 You can use Metrics Server for:
 
-- CPU/Memory based horizontal autoscaling (learn more about [Horizontal Autoscaling])
-- Automatically adjusting/suggesting resources needed by containers (learn more about [Vertical Autoscaling])
+- CPU/Memory based horizontal autoscaling (learn more about [Horizontal Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/))
+- Automatically adjusting/suggesting resources needed by containers (learn more about [Vertical Autoscaling](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/))
 
 Don't use Metrics Server when you need:
 
@@ -33,29 +30,22 @@ Don't use Metrics Server when you need:
 - An accurate source of resource usage metrics
 - Horizontal autoscaling based on other resources than CPU/Memory
 
-For unsupported use cases, check out full monitoring solutions like Prometheus.
+For unsupported use cases, check out full monitoring solutions like [Prometheus](https://github.com/prometheus/prometheus).
 
-<!-- [Horizontal Autoscaling]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-[Vertical Autoscaling]: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/ -->
 
 ## Requirements
 
 Metrics Server has specific requirements for cluster and network configuration. These requirements aren't the default for all cluster
 distributions. Please ensure that your cluster distribution supports these requirements before using Metrics Server:
 
-- The kube-apiserver must [enable an aggregation layer].
-- Nodes must have Webhook [authentication and authorization] enabled.
+- The kube-apiserver must [enable an aggregation layer](https://kubernetes.io/docs/tasks/access-kubernetes-api/configure-aggregation-layer/).
+- Nodes must have Webhook [authentication and authorization](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/) enabled.
 - Kubelet certificate needs to be signed by cluster Certificate Authority (or disable certificate validation by passing `--kubelet-insecure-tls` to Metrics Server)
-- Container runtime must implement a [container metrics RPCs] (or have [cAdvisor] support)
+- Container runtime must implement a [container metrics RPCs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/cri-container-stats.md) (or have [cAdvisor](https://github.com/google/cadvisor) support)
 - Network should support following communication:
   - Control plane to Metrics Server. Control plane node needs to reach Metrics Server's pod IP and port 10250 (or node IP and custom port if `hostNetwork` is enabled). Read more about [control plane to node communication](https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#control-plane-to-node).
   - Metrics Server to Kubelet on all nodes. Metrics server needs to reach node address and Kubelet port. Addresses and ports are configured in Kubelet and published as part of Node object. Addresses in `.status.addresses` and port in `.status.daemonEndpoints.kubeletEndpoint.port` field (default 10250). Metrics Server will pick first node address based on the list provided by `kubelet-preferred-address-types` command line flag (default `InternalIP,ExternalIP,Hostname` in manifests).
 
-<!-- [reachable from kube-apiserver]: https://kubernetes.io/docs/concepts/architecture/master-node-communication/#master-to-cluster
-[enable an aggregation layer]: https://kubernetes.io/docs/tasks/access-kubernetes-api/configure-aggregation-layer/
-[authentication and authorization]: https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/
-[container metrics RPCs]: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/cri-container-stats.md
-[cAdvisor]: https://github.com/google/cadvisor -->
 
 ## Security context
 
@@ -71,7 +61,7 @@ Starting from v0.5.0 Metrics Server comes with default resource requests that sh
 - 100m core of CPU
 - 200MiB of memory
 
-Metrics Server resource usage depends on multiple independent dimensions, creating a [Scalability Envelope].
+Metrics Server resource usage depends on multiple independent dimensions, creating a [Scalability Envelope](https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md).
 Default Metrics Server configuration should work in clusters that don't exceed any of the thresholds listed below:
 
 Quantity               | Namespace threshold | Cluster threshold
@@ -89,7 +79,6 @@ For clusters of more than 100 nodes, allocate additionally:
 You can use the same approach to lower resource requests, but there is a boundary
 where this may impact other scalability dimensions like maximum number of pods per node.
 
-<!-- [Scalability Envelope]: https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md -->
 
 ### Configuration
 
@@ -106,3 +95,9 @@ You can get a full list of Metrics Server configuration flags by running:
 ```shell
 docker run --rm registry.k8s.io/metrics-server/metrics-server:v0.7.2 --help
 ```
+
+## Quick Start
+
+After installation, click on a workload of the cluster or project to enter the details page of the Deployment or StatefulSet. Under the **More** menu, you will find the **Edit Autoscaling** option. 
+
+After settings, the system will automatically adjust the number of pod replicas for the workload based on the target CPU and memory usage you set.
