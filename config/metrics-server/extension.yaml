@@ -1,6 +1,6 @@
 apiVersion: kubesphere.io/v1alpha1
 name: metrics-server
-version: 0.7.2-beta.0
+version: 0.7.2
 displayName:
   zh: Metrics Server
   en: Metrics Server
@@ -35,18 +35,20 @@ dependencies:
   - name: metrics-server
     tags:
       - agent
-  - name: ks-autoscaling-controller
-    tags:
-      - agent
+    condition: metricsServer.enabled
   - name: frontend
     tags:
       - extension
     condition: frontend.enabled
+  - name: ks-autoscaling-controller
+    tags:
+      - agent
 # installationMode describes how to install subcharts, it can be HostOnly or Multicluster.
 # In Multicluster mode, the subchart with tag `extension` will only be deployed to the host cluster,
 # and the subchart with tag `agent` will be deployed to all selected clusters.
 installationMode: Multicluster
 images:
   - docker.io/kubesphere/metrics-server:v0.7.2
-  - docker.io/kubesphere/ks-autoscaling-controller:v1.0.0-beta.1
+  - docker.io/kubesphere/metrics-server-frontend:v1.0.0
+  - docker.io/kubesphere/ks-autoscaling-controller:v1.0.0
 docs: https://docs.kubesphere.com.cn/

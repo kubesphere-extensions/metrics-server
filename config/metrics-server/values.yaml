@@ -2,27 +2,9 @@ global:
   imageRegistry: ""
   imagePullSecrets: []
 
-ks-autoscaling-controller:
-  extraArgs:
-  - '--enable-hpa'
 
-  image:
-    registry: docker.io
-    repository: kubesphere/ks-autoscaling-controller
-    tag: "v1.0.0-beta.1"
-
-  resources:
-    limits:
-      cpu: 200m
-      memory: 512Mi
-    requests:
-      cpu: 10m
-      memory: 64Mi
-
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
+metricsServer:
+  enabled: true
 
 metrics-server:
   fullnameOverride: "metrics-server"
@@ -30,7 +12,7 @@ metrics-server:
   image:
     registry: docker.io
     repository: kubesphere/metrics-server
-    tag: "v0.7.2"
+    # tag: "v0.7.2"
 
   args:
   - --kubelet-insecure-tls
@@ -54,4 +36,25 @@ frontend:
     repository: kubesphere/metrics-server-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"  
+    tag: "v1.0.0"  
+
+ks-autoscaling-controller:
+  extraArgs:
+  - '--enable-hpa'
+
+  image:
+    registry: docker.io
+    repository: kubesphere/ks-autoscaling-controller
+    tag: "v1.0.0"
+
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
