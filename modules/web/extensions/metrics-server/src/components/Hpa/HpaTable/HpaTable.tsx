@@ -283,7 +283,7 @@ export const HpaTable = (props: HpaTableProps) => {
           return (
             <Field
               value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-              label={`当前：${cpuCurrentUtilization}%`}
+              label={`${t('metricsServer.current')}：${cpuCurrentUtilization}%`}
             />
           );
         },
