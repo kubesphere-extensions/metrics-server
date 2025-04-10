@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, FormItem, Input, Modal, useForm, notify } from '@kubed/components';
 import { BasePathParams, IHpaDetail, memoryFormat, NumberInput } from '@ks-console/shared';
 import styled from 'styled-components';
-import { merge } from 'lodash';
+import { merge, omit } from 'lodash';
 import { useEditMutation } from '../../../data/useEditMutation';
 
 type HpaFormModalProps = {
@@ -88,7 +88,8 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
   };
 
   const onEdit = (formValues: any) => {
-    patchHpa(formValues, {
+    const finalFormValues = omit(formValues, ['metadata.ownerReferences', 'spec.scaleTargetRef']);
+    patchHpa(finalFormValues, {
       onSuccess: () => {
         onOk();
         form.resetFields();
