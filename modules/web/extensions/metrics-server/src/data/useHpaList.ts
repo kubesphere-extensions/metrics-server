@@ -17,7 +17,8 @@ interface Metric {
       averageValue?: string;
     };
     current?: {
-      averageValue: number;
+      averageValue?: string;
+      averageUtilization?: number;
     };
   };
 }
@@ -59,7 +60,7 @@ const mapper = (item: HpaItem) => {
     maxReplicas: spec.maxReplicas,
     cpuTargetUtilization: findMetric(spec?.metrics, 'cpu')?.target?.averageUtilization ?? '',
     memoryTargetValue: findMetric(spec?.metrics, 'memory')?.target?.averageValue ?? '',
-    cpuCurrentUtilization: findCurrent(status?.currentMetrics, 'cpu')?.averageValue ?? 0,
+    cpuCurrentUtilization: findCurrent(status?.currentMetrics, 'cpu')?.averageUtilization ?? 0,
     memoryCurrentValue: findCurrent(status?.currentMetrics, 'memory')?.averageValue ?? 0,
     _originData: getOriginData(item),
   };
