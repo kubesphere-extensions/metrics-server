@@ -20,7 +20,7 @@ export const menus = [
     actionValue: 'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server',
   },
   {
-    parent: 'pageAction.cluster.deployments.detail',
+    parent: 'pageNav.cluster.deployments.detail',
     name: 'metrics-server',
     icon: 'SmcDuotone',
     ksModule: 'metrics-server',
@@ -29,10 +29,10 @@ export const menus = [
     action: 'edit',
     order: 5,
     actionType: 'modal',
-    actionValue: 'pageAction://pageAction.cluster.deployments.detail.metrics-server',
+    actionValue: 'pageNav://pageNav.workspace.workloads.deployments-detail.metrics-server',
   },
   {
-    parent: 'pageAction.cluster.statefulsets.detail',
+    parent: 'pageNav.cluster.statefulsets.detail',
     name: 'metrics-server',
     icon: 'SmcDuotone',
     clusterModule: 'metrics-server',
@@ -40,6 +40,6 @@ export const menus = [
     action: 'edit',
     order: 5,
     actionType: 'modal',
-    actionValue: 'pageAction://pageAction.cluster.statefulsets.detail.metrics-server',
+    actionValue: 'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server',
   },
 ];
