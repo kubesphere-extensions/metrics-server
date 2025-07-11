@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, FormItem, Input, Modal, notify, useForm } from '@kubed/components';
 import { BasePathParams, hpaStore, NumberInput } from '@ks-console/shared';
 import styled from 'styled-components';
-import { get } from 'lodash';
 
 type HpaFormModalProps = {
   detail?: any;
@@ -29,7 +28,7 @@ const HpaFormInner = styled.div`
 
 const { createHpa } = hpaStore;
 export const HpaCreateModal = (props: HpaFormModalProps) => {
-  const { detail, workloadStore, params, onOk, onCancel, open } = props;
+  const { detail, params, onOk, onCancel, open } = props;
 
   const { name, namespace } = params;
   const { uid, kind } = detail;
@@ -65,14 +64,6 @@ export const HpaCreateModal = (props: HpaFormModalProps) => {
     },
   };
 
-  const { useUpdateDeploymentMutation } = workloadStore;
-
-  const mutateUpdateDeploymentMutation = useUpdateDeploymentMutation({
-    onSuccess: () => {
-      notify.success(t('metricsServer.createSuccess'));
-    },
-  });
-
   const [form] = useForm();
   const onFinish = () => {
     form.validateFields().then(() => {
@@ -83,16 +74,7 @@ export const HpaCreateModal = (props: HpaFormModalProps) => {
 
   const onCreate = async (formValues: any) => {
     await createHpa(detail, formValues);
-    mutateUpdateDeploymentMutation.mutate({
-      params: detail,
-      data: {
-        metadata: {
-          annotations: {
-            'kubesphere.io/relatedHPA': get(formValues, 'metadata.name', detail.name),
-          },
-        },
-      },
-    });
+    notify.success(t('metricsServer.createSuccess'));
     onOk();
     form.resetFields();
   };

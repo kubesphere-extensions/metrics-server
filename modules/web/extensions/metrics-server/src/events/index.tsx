@@ -20,7 +20,7 @@ export const events = {
       return {
         ...point,
         disabled,
-        show: hasClusterModule(context.detail.cluster, 'metrics-server'),
+        show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <SmcDuotone size={40} />,
       };
     },
@@ -36,7 +36,7 @@ export const events = {
       return {
         ...point,
         disabled,
-        show: hasClusterModule(context.detail.cluster, 'metrics-server'),
+        show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <SmcDuotone size={40} />,
       };
     },

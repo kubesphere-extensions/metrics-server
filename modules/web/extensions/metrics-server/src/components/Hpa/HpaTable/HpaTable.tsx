@@ -302,7 +302,11 @@ export const HpaTable = (props: HpaTableProps) => {
           return (
             <Field
               value={memoryTargetValue}
-              label={`${t('metricsServer.current')}：${transformBytes(memoryCurrentValue)}`}
+              label={
+                memoryCurrentValue
+                  ? `${t('metricsServer.current')}：${transformBytes(memoryCurrentValue)}`
+                  : '--'
+              }
             />
           );
         },
