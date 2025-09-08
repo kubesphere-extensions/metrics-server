@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import * as React from 'react';
 import { Content, Overlay, SheetContentChildrenWrapper, AlertContent } from './styles';
 import Layout from './Layout';
-import { HpaTable } from './HpaTable/HpaTable';
+import { HpaTable } from './HpaTable';
 
 const { Sheet, SheetContent, SheetHeader, SheetFieldTitle, SheetHeaderClose } = SheetPrimitive;
 
@@ -49,13 +49,13 @@ export const HpaModal = (props: HpaModalProps) => {
           >
             <SheetContentChildrenWrapper>
               <SheetHeader>
-                <SheetFieldTitle title={t('metricsServer.title')} />
+                <SheetFieldTitle title={t('hpa.title')} />
               </SheetHeader>
               <Content>
                 <Alert showIcon={false} type="info" style={{ marginBottom: 16 }}>
                   <AlertContent>
                     <Warning2Duotone variant="light" type="light" />
-                    {t('metricsServer.description')}
+                    {t('hpa.description')}
                   </AlertContent>
                 </Alert>
                 <HpaTable

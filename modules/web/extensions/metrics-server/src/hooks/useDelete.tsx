@@ -11,58 +11,53 @@ interface DelProps {
   [key: string]: any;
 }
 
-export const useDelete = (params: PathParams) => {
+export const useDelete = () => {
   const modal = useModal();
 
   const { mutateAsync: batchDelete } = useBatchDeleteMutation();
 
-  const deleteHpa = useCallback(
-    async (props: DelProps) => {
-      const { type, resource, onOk, onSuccess, onCancel = () => {}, ...rest } = props;
-      const items = resource
-        ? Array.isArray(resource)
-          ? resource
-          : [resource]
-        : Array.isArray(props)
-          ? props
-          : [props];
+  const deleteHpa = useCallback(async (props: DelProps) => {
+    const { type, resource, onOk, onSuccess, onCancel = () => {}, ...rest } = props;
+    const items = resource
+      ? Array.isArray(resource)
+        ? resource
+        : [resource]
+      : Array.isArray(props)
+        ? props
+        : [props];
 
-      const handleOk = async () => {
-        const deleteParams = items.map(item => ({
-          namespace: item.namespace,
-          name: item.name,
-          cluster: item.cluster,
-          k8sVersion: globals.clusterConfig?.[item.cluster!]?.k8sVersion,
-          ...params,
-        }));
+    const handleOk = async () => {
+      const deleteParams = items.map(item => ({
+        namespace: item.namespace,
+        name: item.name,
+        cluster: item.cluster,
+        k8sVersion: globals.clusterConfig?.[item.cluster!]?.k8sVersion,
+      }));
 
-        await batchDelete(deleteParams);
-        notify.success(t('DELETED_SUCCESSFULLY'));
-        onSuccess?.();
-        // callback?.('delete');
-      };
+      await batchDelete(deleteParams);
+      notify.success(t('DELETED_SUCCESSFULLY'));
+      onSuccess?.();
+    };
 
-      const modalId = modal.open({
-        header: null,
-        footer: null,
-        closable: false,
-        width: 504,
-        content: (
-          <DeleteConfirmContent
-            onOk={onOk || handleOk}
-            resource={items}
-            type={type}
-            onCancel={() => {
-              onCancel();
-              modal.close(modalId);
-            }}
-            {...rest}
-          />
-        ),
-      });
-    },
-    [params],
-  );
+    const modalId = modal.open({
+      header: null,
+      footer: null,
+      closable: false,
+      width: 504,
+      content: (
+        <DeleteConfirmContent
+          onOk={onOk || handleOk}
+          resource={items}
+          type={type}
+          onCancel={() => {
+            onCancel();
+            modal.close(modalId);
+          }}
+          {...rest}
+        />
+      ),
+    });
+  }, []);
 
   return { deleteHpa };
 };

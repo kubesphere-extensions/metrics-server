@@ -3,53 +3,41 @@ import {
   defaultCheckboxColumn,
   getDisplayName,
   getLocalTime,
-  IHpaDetail,
-  joinSelector,
-  ProjectAliasName,
   tableState2Query,
   useBatchActions,
   useItemActions,
   useModalAction,
   useTableActions,
+  BasePathParams,
+  useUrlSearchParamsStatus,
+  useWorkspaceProjectSelect,
+  EventsSheet,
+  IHpaDetail,
 } from '@ks-console/shared';
-import { Card, DataTable, Field, notify } from '@kubed/components';
-import { Pen, Trash, SmcDuotone } from '@kubed/icons';
+import { Card, DataTable, Field } from '@kubed/components';
+import { Pen, Trash, Stretch } from '@kubed/icons';
 import { ColumnDef, Table } from '@tanstack/react-table';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Empty } from '../../Empty/Empty';
-import { HpaCreateModal } from '../HpaCreateModal/HpaCreateModal';
-import { HpaStatus } from '../HpaStatus/HpaStatus';
-import { HpaEditModal } from '../HpaEditModal/HpaEditModal';
-import { transformBytes } from '../../../utils';
-import { useHpaList } from '../../../data/useHpaList';
-import { useDelete } from '../../../hooks/useDelete';
-import { useEditYaml } from '../../../hooks/useEditYaml';
+import { Empty } from '../../components/Empty/Empty';
+import { HpaCreateModal } from '../../components/Modal/HpaCreateModal/HpaCreateModal';
+import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
+import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
+import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
+
+import { transformBytes } from '../../utils';
+import { useHpaList } from '../../data/useHpaList';
+import { useDelete } from '../../hooks/useDelete';
+import { createHpaStore } from '../../stores/hpaStore';
+import { useParams } from 'react-router-dom';
+import { get } from 'lodash';
+import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 
 const Container = styled.div`
   table .table-cell {
     word-break: break-word;
   }
 `;
-
-interface HpaTableProps {
-  cluster?: string;
-  workspace?: string;
-  namespace?: string;
-  kind?: string;
-  name?: string;
-  apiVersion?: string;
-  onCreate?: () => void;
-  detail?: RecordType;
-  workloadStore?: any;
-  module?: string;
-}
-
-interface Query {
-  cluster?: string;
-  namespace?: string;
-  [key: string]: string | number | boolean | undefined;
-}
 
 interface RecordType {
   [key: string]: any;
@@ -71,26 +59,26 @@ const useSteps = (steps: number[]) => {
   };
 };
 
-export const HpaTable = (props: HpaTableProps) => {
-  const { cluster, workspace, namespace, kind, name, detail, workloadStore, module } = props;
+export const WorkSpaceHpaList = () => {
+  const { workspace } = useParams<BasePathParams>();
+  const { state, setState } = useUrlSearchParamsStatus([]);
+  const { params: namespaceParams, render: renderSelect } = useWorkspaceProjectSelect({
+    workspace,
+    showAll: false,
+  });
 
-  const [state, setState] = React.useState<Record<string, any>>({});
+  const useHpaStore = createHpaStore();
 
-  const query: Query = React.useMemo(() => {
+  const query = React.useMemo(() => {
     return {
-      cluster,
-      namespace,
-      labelSelector: joinSelector({
-        'autoscaling.kubeshpere.io/scale-target-kind': kind,
-        'autoscaling.kubeshpere.io/scale-target-name': name,
-      }),
       ...tableState2Query(state),
+      ...namespaceParams,
     };
-  }, [state, cluster, namespace, kind, name]);
+  }, [state, namespaceParams]);
 
   const { step, nextStep } = useSteps(steps);
-  const { data, isLoading, isFetching, isFetched, refetch } = useHpaList(query, {
-    enabled: !!cluster && !!namespace && !!kind && !!name,
+  const { data, isLoading, isFetching, refetch } = useHpaList(query, {
+    enabled: !!namespaceParams?.cluster && !!namespaceParams?.namespace,
     refetchInterval: step * 1000,
     onSettled: () => {
       nextStep();
@@ -105,34 +93,39 @@ export const HpaTable = (props: HpaTableProps) => {
     modal: HpaCreateModal,
     id: 'hpa-create',
   });
+  const { open: openYaml, close: closeYaml } = useModalAction({
+    modal: HpaYamlModal,
+    id: 'hpa-yaml',
+  });
+  const { open: openEvents } = useModalAction({
+    modal: EventsSheet,
+    id: 'hpa-events',
+  });
+  const { open: openScaler, close: closeScaler } = useModalAction({
+    modal: HpaScalerSettingModal,
+    id: 'hpa-scalerSettings',
+  });
 
   const tableRef = React.useRef<Table<RecordType>>();
 
-  const { editYaml } = useEditYaml({
-    cluster,
-    namespace,
-  });
-  const { deleteHpa } = useDelete({
-    cluster,
-    namespace,
-  });
+  const { deleteHpa } = useDelete();
 
   const renderBatchActions = useBatchActions({
-    authKey: module,
+    authKey: '',
     params: {
-      cluster,
-      namespace,
+      cluster: namespaceParams?.cluster,
+      namespace: namespaceParams?.namespace,
     },
     actions: [
       {
         key: 'delete',
-        text: t('DELETE'),
+        text: t('hpa.common.delete'),
         action: 'delete',
         onClick: () => {
           const resource = tableRef.current?.getSelectedRowModel()?.rows.map(row => row.original!);
           deleteHpa({
             resource,
-            type: 'metricsServer.title',
+            type: 'hpa.title',
             onSuccess: () => {
               tableRef.current?.resetRowSelection();
               refetch();
@@ -147,17 +140,17 @@ export const HpaTable = (props: HpaTableProps) => {
   });
 
   const renderItemActions = useItemActions({
-    authKey: module,
+    authKey: '',
     params: {
-      cluster,
-      namespace,
+      cluster: namespaceParams?.cluster,
+      namespace: namespaceParams?.namespace,
     },
     actions: [
       {
         key: 'edit',
         action: 'edit',
         icon: <Pen />,
-        text: t('metricsServer.edit'),
+        text: t('hpa.common.editBaseInfo'),
         onClick: (_, record) => {
           open({
             onOk: () => {
@@ -165,9 +158,8 @@ export const HpaTable = (props: HpaTableProps) => {
               refetch();
             },
             onCancel: close,
-            detail,
             hpaDetail: record as IHpaDetail,
-            params: { cluster, name, namespace },
+            params: { cluster: namespaceParams?.cluster, namespace: namespaceParams?.namespace },
           });
         },
       },
@@ -175,14 +167,33 @@ export const HpaTable = (props: HpaTableProps) => {
         key: 'editYaml',
         action: 'edit',
         icon: <Pen />,
-        text: t('metricsServer.editYaml'),
+        text: t('hpa.common.editYaml'),
         onClick: (_, record) => {
-          editYaml({
-            initialValues: record,
-            onSuccess: () => {
-              notify.success(t('metricsServer.updateSuccess'));
+          openYaml({
+            hpaDetail: record as IHpaDetail,
+            params: { cluster: namespaceParams?.cluster, namespace: namespaceParams?.namespace },
+            onOk: () => {
+              closeYaml();
               refetch();
             },
+            onCancel: closeYaml,
+          });
+        },
+      },
+      {
+        key: 'editScalerSettings',
+        action: 'edit',
+        icon: <Pen />,
+        text: t('hpa.common.editScalerSettings'),
+        onClick: (_, record) => {
+          openScaler({
+            hpaDetail: record as IHpaDetail,
+            params: { cluster: namespaceParams?.cluster, namespace: namespaceParams?.namespace },
+            onOk: () => {
+              closeScaler();
+              refetch();
+            },
+            onCancel: closeScaler,
           });
         },
       },
@@ -190,11 +201,11 @@ export const HpaTable = (props: HpaTableProps) => {
         key: 'delete',
         action: 'delete',
         icon: <Trash />,
-        text: t('metricsServer.delete'),
+        text: t('hpa.common.delete'),
         onClick: (_, record) => {
           deleteHpa({
             resource: record,
-            type: 'metricsServer.title',
+            type: 'hpa.title',
             onSuccess: () => {
               tableRef.current?.resetRowSelection();
               refetch();
@@ -206,28 +217,33 @@ export const HpaTable = (props: HpaTableProps) => {
   });
 
   const renderTableAction = useTableActions({
-    authKey: module,
+    authKey: '',
     params: {
-      cluster,
-      namespace,
+      cluster: namespaceParams?.cluster,
+      namespace: namespaceParams?.namespace,
     },
     actions: [
       {
         key: 'create',
         action: 'create',
-        text: t('metricsServer.create'),
+        text: t('hpa.common.create'),
         props: {
           color: 'secondary',
           shadow: true,
         },
-        disabled: !cluster || !namespace,
+        disabled: !namespaceParams?.cluster || !namespaceParams?.namespace,
         onClick: e => {
           e.stopPropagation();
           e.preventDefault();
           openCreate({
-            detail,
-            workloadStore,
-            params: { cluster, namespace, name },
+            useHpaStore,
+            extraParams: {
+              cluster: namespaceParams?.cluster,
+              name: '',
+              workspace,
+              namespace: namespaceParams?.namespace,
+              kind: '',
+            },
             onOk: () => {
               closeCreate();
               refetch();
@@ -244,7 +260,7 @@ export const HpaTable = (props: HpaTableProps) => {
       defaultCheckboxColumn,
       {
         accessorKey: 'name',
-        header: t('metricsServer.field.name'),
+        header: t('hpa.policyName'),
         meta: {
           searchKey: 'name',
           sortable: true,
@@ -252,7 +268,8 @@ export const HpaTable = (props: HpaTableProps) => {
         cell: info => {
           return (
             <Avatar
-              icon={<SmcDuotone size={40} />}
+              to={`/workspaces/${workspace}/clusters/${namespaceParams.cluster}/projects/${namespaceParams.namespace}/hpa-detail/${info.row.original.name}`}
+              icon={<Stretch size={40} />}
               title={<a>{getDisplayName(info.row.original)}</a>}
               description={info.row.original.description}
             />
@@ -261,17 +278,32 @@ export const HpaTable = (props: HpaTableProps) => {
       },
       {
         accessorKey: 'status',
-        header: t('metricsServer.field.status'),
+        header: t('hpa.common.status'),
         meta: {
           sortable: false,
           searchKey: 'status',
         },
         enableHiding: true,
-        cell: info => <HpaStatus status={info.row.original.status} />,
+        cell: info => (
+          <HpaStatus
+            onClick={() => openEvents({ detail: info.row.original, headerTitle: '查看事件' })}
+            status={info.row.original.status}
+          />
+        ),
+      },
+      {
+        accessorKey: 'scaleTargetRef',
+        header: t('hpa.scaleTarget'),
+        enableHiding: true,
+        cell: info => {
+          const name = get(info.row.original, '_originData.spec.scaleTargetRef.name');
+          const type = get(info.row.original, '_originData.spec.scaleTargetRef.kind');
+          return <Field label={type} value={name}></Field>;
+        },
       },
       {
         accessorKey: 'cpuTargetUtilization',
-        header: t('metricsServer.targetCPUUsageWithNoUnit'),
+        header: t('hpa.targetCPUUsage'),
         meta: {
           th: {
             width: '15%',
@@ -283,14 +315,14 @@ export const HpaTable = (props: HpaTableProps) => {
           return (
             <Field
               value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-              label={`${t('metricsServer.current')}：${cpuCurrentUtilization}%`}
+              label={`${t('hpa.common.current')}：${cpuCurrentUtilization}%`}
             />
           );
         },
       },
       {
         accessorKey: 'memoryTargetValue',
-        header: t('metricsServer.targetMemoryUsageWithNoUnit'),
+        header: t('hpa.targetMemoryUsage'),
         meta: {
           th: {
             width: '15%',
@@ -299,50 +331,55 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => {
           const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
-          const parsedValue = parseFloat(memoryCurrentValue);
           return (
             <Field
               value={memoryTargetValue}
               label={
-                parsedValue ? `${t('metricsServer.current')}：${transformBytes(parsedValue)}` : '--'
+                memoryCurrentValue
+                  ? `${t('hpa.common.current')}：${transformBytes(memoryCurrentValue)}`
+                  : '--'
               }
             />
           );
         },
       },
       {
-        accessorKey: 'minReplicas',
-        header: t('metricsServer.minimumReplicas'),
+        accessorKey: 'replicasRange',
+        header: t('hpa.range'),
         meta: {
           th: {
             width: '10%',
           },
         },
         enableHiding: true,
+        cell: info => {
+          const minReplicas = get(info.row.original, 'minReplicas');
+          const maxReplicas = get(info.row.original, 'maxReplicas');
+          return `${minReplicas}-${maxReplicas}`;
+        },
       },
       {
-        accessorKey: 'maxReplicas',
-        header: t('metricsServer.maximumReplicas'),
+        accessorKey: 'desiredReplicas',
+        header: t('hpa.desiredReplicas'),
         meta: {
           th: {
             width: '10%',
           },
         },
         enableHiding: true,
-        cell: info => info.getValue() ?? '-',
+        cell: info => {
+          const desiredReplicas = get(info.row.original, 'status.desiredReplicas');
+          return desiredReplicas;
+        },
       },
       {
         accessorKey: 'namespace',
-        header: t('metricsServer.field.project'),
+        header: t('hpa.common.project'),
         enableHiding: true,
-        cell: info => {
-          const value = info.getValue();
-          return <ProjectAliasName project={value} workspace={workspace} />;
-        },
       },
       {
         accessorKey: 'createTime',
-        header: t('metricsServer.field.creationTime'),
+        header: t('hpa.common.creationTime'),
         meta: {
           sortable: true,
         },
@@ -366,7 +403,7 @@ export const HpaTable = (props: HpaTableProps) => {
         cell: info => renderItemActions(info.getValue(), info.row.original),
       },
     ],
-    [namespace],
+    [namespaceParams?.namespace],
   );
 
   const baseConfig = React.useState(() =>
@@ -400,8 +437,9 @@ export const HpaTable = (props: HpaTableProps) => {
         },
         toolbar: () => {
           return {
-            batchActions: renderBatchActions(),
+            toolbarLeft: renderSelect(),
             toolbarRight: renderTableAction(),
+            batchActions: renderBatchActions(),
           };
         },
         filters: () => {
@@ -410,7 +448,7 @@ export const HpaTable = (props: HpaTableProps) => {
             suggestions: [
               {
                 key: 'name',
-                label: t('metricsServer.field.name'),
+                label: t('hpa.common.name'),
               },
             ],
           };
@@ -423,17 +461,18 @@ export const HpaTable = (props: HpaTableProps) => {
     tableRef.current = table;
   }, []);
 
-  const isEmpty =
-    isFetched && (!query.page || query.page == 1) && !query.name && !data?.data?.length;
+  // const isEmpty =
+  //   isFetched && (!query.page || query.page == 1) && !query.name && !data?.data?.length;
+  const isEmpty = false;
 
   return (
     <>
       {isEmpty ? (
         <Card padding={32}>
           <Empty
-            icon={<SmcDuotone size={48} />}
-            title={t('metricsServer.empty.title')}
-            desc={t('metricsServer.empty.description')}
+            icon={<Stretch size={48} />}
+            title={t('hpa.empty.title')}
+            desc={t('hpa.empty.description')}
             actions={renderTableAction()}
           />
         </Card>

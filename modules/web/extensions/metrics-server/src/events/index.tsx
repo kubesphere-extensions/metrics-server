@@ -1,7 +1,7 @@
 import { SmcDuotone } from '@kubed/icons';
 import { get, pick } from 'lodash';
 import { default as React } from 'react';
-import { HpaModal } from '../components/Hpa';
+import { HpaModal } from '../components/WorkloadSheet';
 import { hasClusterModule } from '@ks-console/shared';
 
 export const events = {
