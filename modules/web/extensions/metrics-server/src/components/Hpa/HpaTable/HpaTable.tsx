@@ -299,13 +299,12 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => {
           const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
+          const parsedValue = parseFloat(memoryCurrentValue);
           return (
             <Field
               value={memoryTargetValue}
               label={
-                memoryCurrentValue
-                  ? `${t('metricsServer.current')}：${transformBytes(memoryCurrentValue)}`
-                  : '--'
+                parsedValue ? `${t('metricsServer.current')}：${transformBytes(parsedValue)}` : '--'
               }
             />
           );
