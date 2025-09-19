@@ -7,12 +7,12 @@ Please do not delete this line of version tag
 
 ### Features
 
-- Create and manage HPA resource UI interaction optimization and split into pluggable frontend.
-- Added `ks-autoscaling-controller` component to add tags to handle HPA and Workload mapping.
+- UI interaction optimization for creating and managing HPA resources and split into pluggable frontend.
+- Add `ks-autoscaling-controller` component to add tags to handle HPA and Workload mapping.
 
 ### Misc
 
-- metrics-server upgraded from v0.7.0 to v0.7.2.
+- Upgrade metrics-server from v0.7.0 to v0.7.2.
 
 <!---
 Please do not delete this line of version tag
