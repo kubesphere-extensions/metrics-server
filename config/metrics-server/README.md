@@ -9,20 +9,61 @@ making it easier to debug autoscaling pipelines.
 
 Metrics Server is not meant for non-autoscaling purposes. For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. In such cases please collect metrics from Kubelet `/metrics/resource` endpoint directly.
 
+## Quick Start
+
+After installation, click on a workload of the cluster or project to enter the details page of the Deployment or StatefulSet, you can create **Pod Horizontal Auto Scaling**.
+
+After settings, the system will automatically adjust the number of pod replicas for the workload based on the target CPU and memory usage you set.
+
+
+## Upgrade
+
+**⚠️ Attention**
+
+Before extension upgrades, rigorously verify that image tag configurations meets expectations. New releases typically employ updated image tags; explicit retention of legacy tags in configurations may result in persistent deployment of obsolete versions, thereby preventing acquisition of critical enhancements or fixes.
+
+To ensure seamless upgrades, please follow these recommendations:
+
+1. **Check and remove manually specified image tags**, or synchronize them with version-specific tags required by the update.
+2. **Default configurations are strongly recommended** to autonomously procure current release-aligned image tags and settings.
+
+The following YAML paths govern image tag configurations within this extension:
+
+```yaml
+metrics-server:
+  image:
+    registry: docker.io
+    repository: kubesphere/metrics-server
+    # tag: "v0.7.2"
+
+frontend:
+  image:
+    registry: docker.io
+    repository: kubesphere/metrics-server-frontend
+    # tag: "v1.0.0"  
+
+ks-autoscaling-controller:
+  image:
+    registry: docker.io
+    repository: kubesphere/ks-autoscaling-controller
+    # tag: "v1.0.0"
+```
+
+## Configuration  
+
+### Use cases
+
+You can use Metrics Server for:
+
+- CPU/Memory based horizontal autoscaling (learn more about [Horizontal Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/))
+- Automatically adjusting/suggesting resources needed by containers (learn more about [Vertical Autoscaling](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/))
+
 Metrics Server offers:
 
 - A single deployment that works on most clusters (see [Requirements](#requirements))
 - Fast autoscaling, collecting metrics every 15 seconds.
 - Resource efficiency, using 1 mili core of CPU and 2 MB of memory for each node in a cluster.
 - Scalable support up to 5,000 node clusters.
-
-
-## Use cases
-
-You can use Metrics Server for:
-
-- CPU/Memory based horizontal autoscaling (learn more about [Horizontal Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/))
-- Automatically adjusting/suggesting resources needed by containers (learn more about [Vertical Autoscaling](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler/))
 
 Don't use Metrics Server when you need:
 
@@ -33,7 +74,7 @@ Don't use Metrics Server when you need:
 For unsupported use cases, check out full monitoring solutions like [Prometheus](https://github.com/prometheus/prometheus).
 
 
-## Requirements
+### Requirements
 
 Metrics Server has specific requirements for cluster and network configuration. These requirements aren't the default for all cluster
 distributions. Please ensure that your cluster distribution supports these requirements before using Metrics Server:
@@ -47,14 +88,14 @@ distributions. Please ensure that your cluster distribution supports these requi
   - Metrics Server to Kubelet on all nodes. Metrics server needs to reach node address and Kubelet port. Addresses and ports are configured in Kubelet and published as part of Node object. Addresses in `.status.addresses` and port in `.status.daemonEndpoints.kubeletEndpoint.port` field (default 10250). Metrics Server will pick first node address based on the list provided by `kubelet-preferred-address-types` command line flag (default `InternalIP,ExternalIP,Hostname` in manifests).
 
 
-## Security context
+### Security context
 
 Metrics Server requires the `CAP_NET_BIND_SERVICE` capability in order to bind to a privileged ports as non-root.
 If you are running Metrics Server in an environment that uses [PSSs](https://kubernetes.io/docs/concepts/security/pod-security-standards/) or other mechanisms to restrict pod capabilities, ensure that Metrics Server is allowed
 to use this capability.
 This applies even if you use the `--secure-port` flag to change the port that Metrics Server binds to a non-privileged port.
 
-## Scaling
+### Scaling
 
 Starting from v0.5.0 Metrics Server comes with default resource requests that should guarantee good performance for most cluster configurations up to 100 nodes:
 
@@ -96,8 +137,6 @@ You can get a full list of Metrics Server configuration flags by running:
 docker run --rm registry.k8s.io/metrics-server/metrics-server:v0.7.2 --help
 ```
 
-## Quick Start
+## Uninstallation
 
-After installation, click on a workload of the cluster or project to enter the details page of the Deployment or StatefulSet. Under the **More** menu, you will find the **Edit Autoscaling** option. 
-
-After settings, the system will automatically adjust the number of pod replicas for the workload based on the target CPU and memory usage you set.
+On the **Extensions Center** page, click **Metrics Server**, then click the icon next to **Installed** and choose **Uninstall** to start the uninstallation process.

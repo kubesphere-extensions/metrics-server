@@ -36,7 +36,7 @@ frontend:
     repository: kubesphere/metrics-server-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v1.0.0"  
+    # tag: "v1.0.1"  
 
 ks-autoscaling-controller:
   extraArgs:
@@ -45,7 +45,8 @@ ks-autoscaling-controller:
   image:
     registry: docker.io
     repository: kubesphere/ks-autoscaling-controller
-    tag: "v1.0.0"
+    # Overrides the image tag whose default is the chart appVersion.
+    # tag: "v1.0.0"
 
   resources:
     limits:

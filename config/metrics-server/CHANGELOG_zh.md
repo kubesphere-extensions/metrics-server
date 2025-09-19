@@ -9,7 +9,7 @@ Please do not delete this line of version tag
 ### 新特性
 
 - 创建和管理 HPA 资源页面 UI 交互优化，并拆分为可插拔前端
-- 新增 `ks-autoscaling-controller` 组件添加标签用于处理 HPA 与 Workload 映射
+- 新增 `ks-autoscaling-controller` 组件，添加标签用于处理 HPA 与 Workload 映射
 
 ### 其他
 
