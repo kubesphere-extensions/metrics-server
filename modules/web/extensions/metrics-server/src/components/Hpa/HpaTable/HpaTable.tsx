@@ -21,7 +21,7 @@ import { Empty } from '../../Empty/Empty';
 import { HpaCreateModal } from '../HpaCreateModal/HpaCreateModal';
 import { HpaStatus } from '../HpaStatus/HpaStatus';
 import { HpaEditModal } from '../HpaEditModal/HpaEditModal';
-import { transformBytes } from '../../../utils';
+import { quantityToMi } from '../../../utils';
 import { useHpaList } from '../../../data/useHpaList';
 import { useDelete } from '../../../hooks/useDelete';
 import { useEditYaml } from '../../../hooks/useEditYaml';
@@ -299,13 +299,17 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => {
           const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
-          const parsedValue = parseFloat(memoryCurrentValue);
+          let current;
+          try {
+            current = quantityToMi(memoryCurrentValue);
+          } catch (error) {
+            current = '--';
+            console.error(error);
+          }
           return (
             <Field
               value={memoryTargetValue}
-              label={
-                parsedValue ? `${t('metricsServer.current')}：${transformBytes(parsedValue)}` : '--'
-              }
+              label={memoryCurrentValue ? `${t('metricsServer.current')}：${current}` : '--'}
             />
           );
         },
