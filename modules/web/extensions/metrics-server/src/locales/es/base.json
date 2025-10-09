@@ -1,4 +1,5 @@
 {
+  "hpa.menu.parent.title": "Escalado elástico",
   "hpa.validation.name.required": "Ingrese el nombre",
   "hpa.validation.name.pattern": "El nombre solo puede contener letras minúsculas, números y guiones bajos (-), debe comenzar y terminar con una letra minúscula o un número, y tener una longitud máxima de 63 caracteres.",
   "hpa.validation.scaleTarget.required": "El objetivo de escalado no puede estar vacío",

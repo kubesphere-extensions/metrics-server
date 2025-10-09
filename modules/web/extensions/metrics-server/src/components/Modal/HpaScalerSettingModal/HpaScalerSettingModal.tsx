@@ -60,8 +60,8 @@ const HpaScalerSettingModal = ({ params, onOk, onCancel, open, hpaDetail }: HpaF
     },
   ];
   const metrics = hpaDetail?._originData?.spec?.metrics;
-  const cpuMetric = metrics.find((metric: any) => metric.resource.name === 'cpu');
-  const memoryMetric = metrics.find((metric: any) => metric.resource.name === 'memory');
+  const cpuMetric = metrics.find((metric: any) => metric?.resource?.name === 'cpu');
+  const memoryMetric = metrics.find((metric: any) => metric?.resource?.name === 'memory');
   const cpuMetricType = cpuMetric?.resource.target?.type;
   const memoryMetricType = memoryMetric?.resource.target?.type;
   const cpuMetricValue =

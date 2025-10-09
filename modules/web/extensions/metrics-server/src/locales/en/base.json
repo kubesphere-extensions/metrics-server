@@ -1,4 +1,5 @@
 {
+  "hpa.menu.parent.title": "Elastic Scaling",
   "hpa.validation.name.required": "Please enter a name",
   "hpa.validation.name.pattern": "Name can only contain lowercase letters, numbers and hyphens (-), must start and end with lowercase letter or number, maximum 63 characters.",
   "hpa.validation.scaleTarget.required": "Scale target cannot be empty",
