@@ -3,11 +3,11 @@ name: Build Frontend
 on:
   push:
     branches:
-      - '**'
+      - "**"
     paths:
       - modules/web/**
     tags:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 env:
@@ -31,13 +31,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version-file: .nvmrc
 
       - name: Install Yarn
         run: npm install -g yarn
 
+      - name: Login (Internal)
+        uses: ./.github/actions/npm-login
+        with:
+          username: ${{ secrets.INTERNAL_NPM_USERNAME }}
+          password: ${{ secrets.INTERNAL_NPM_PASSWORD }}
+          registry: ${{ secrets.INTERNAL_NPM_REGISTRY }}
+
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile --prefer-offline
         working-directory: ${{ env.FRONTEND_PATH }}
 
       - name: Build
