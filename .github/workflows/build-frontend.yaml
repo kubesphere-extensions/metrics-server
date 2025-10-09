@@ -6,6 +6,7 @@ on:
       - "**"
     paths:
       - modules/web/**
+      - .github/workflows/**
     tags:
       - "*"
   workflow_dispatch:
