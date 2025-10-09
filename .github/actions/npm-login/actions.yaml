@@ -1,0 +1,52 @@
+name: npm Login
+description: Log in to a scoped private registry (e.g. Verdaccio) and optionally verify.
+inputs:
+  username:
+    description: Registry account username (e.g., ci).
+    required: true
+  password:
+    description: Registry account password (will be masked in logs).
+    required: true
+  email:
+    description: Email associated with the registry account (required by npm login).
+    required: true
+    default: "ci@kubesphere.com"
+  registry:
+    description: Base registry URL, e.g. http://<IP>:<PORT>.
+    required: true
+  scope:
+    description: Scoped npm org, e.g. @ks-console.
+    required: true
+    default: "@ks-console"
+  verify:
+    description: Run npm whoami/ping after login.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Clear .npmrc
+      shell: bash
+      run: rm -f "$HOME/.npmrc"
+
+    - name: Mask Password
+      shell: bash
+      run: echo "::add-mask::${{ inputs.password }}"
+
+    - name: Login (non-interactive)
+      shell: bash
+      run: |
+        npx --yes npm-cli-login \
+          -u "${{ inputs.username }}" \
+          -p "${{ inputs.password }}" \
+          -e "${{ inputs.email }}" \
+          -r "${{ inputs.registry }}" \
+          -s "${{ inputs.scope }}"
+
+    - name: Verify Authentication
+      if: ${{ fromJSON(inputs.verify) }}
+      shell: bash
+      run: |
+        npm ping --registry "${{ inputs.registry }}"
+        npm whoami --registry "${{ inputs.registry }}"
