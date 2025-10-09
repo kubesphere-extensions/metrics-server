@@ -31,7 +31,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: ${{ env.FRONTEND_PATH }}/.nvmrc
 
       - name: Install Yarn
         run: npm install -g yarn
