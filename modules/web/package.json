@@ -40,9 +40,13 @@
     "@kubed/diff-viewer": "^0.2.21",
     "@kubed/hooks": "^0.2.21",
     "@kubed/icons": "^0.2.21",
-    "@kubed/log-viewer": "^0.2.21"
+    "@kubed/log-viewer": "^0.2.21",
+    "zustand": "^4.5.5",
+    "immer": "^10.1.3",
+    "react-use": "^17.6.0"
   },
   "devDependencies": {
+    "type-fest": "^5.0.1",
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.8",
@@ -72,7 +76,6 @@
     "@babel/runtime": "^7.15.4",
     "@kubed/stook-devtools": "^0.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
-    "@tanstack/react-query": "^4.13.5",
     "@types/lodash": "^4.14.176",
     "@types/qs": "^6.9.7",
     "@types/react": "^16.9.56",

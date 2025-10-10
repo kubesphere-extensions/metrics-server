@@ -8,6 +8,7 @@ import {
 import { useQuery } from 'react-query';
 import { get } from 'lodash';
 
+import { findCurrentMetric, findTargetMetric } from '../utils';
 interface Metric {
   type: string;
   resource: {
@@ -45,10 +46,6 @@ const getFilterParams = (params: Record<string, any>) => {
 };
 const module = 'horizontalpodautoscalers';
 
-const findMetric = (metrics?: Metric[], name?: string) =>
-  metrics?.find(m => m.type === 'Resource' && m.resource.name === name)?.resource;
-const findCurrent = (metrics?: Metric[], name?: string) =>
-  metrics?.find(m => m.type === 'Resource' && m.resource.name === name)?.resource?.current;
 const mapper = (item: HpaItem) => {
   const baseInfo = getBaseInfo(item);
   const spec = item.spec || { minReplicas: 0, maxReplicas: 0 };
@@ -58,10 +55,11 @@ const mapper = (item: HpaItem) => {
     ...baseInfo,
     minReplicas: spec.minReplicas,
     maxReplicas: spec.maxReplicas,
-    cpuTargetUtilization: findMetric(spec?.metrics, 'cpu')?.target?.averageUtilization ?? '',
-    memoryTargetValue: findMetric(spec?.metrics, 'memory')?.target?.averageValue ?? '',
-    cpuCurrentUtilization: findCurrent(status?.currentMetrics, 'cpu')?.averageUtilization ?? 0,
-    memoryCurrentValue: findCurrent(status?.currentMetrics, 'memory')?.averageValue ?? 0,
+    cpuTargetUtilization: findTargetMetric(spec?.metrics, 'cpu')?.target?.averageUtilization ?? '',
+    memoryTargetValue: findTargetMetric(spec?.metrics, 'memory')?.target?.averageValue ?? '',
+    cpuCurrentUtilization:
+      findCurrentMetric(status?.currentMetrics, 'cpu')?.averageUtilization ?? 0,
+    memoryCurrentValue: findCurrentMetric(status?.currentMetrics, 'memory')?.averageValue ?? 0,
     _originData: getOriginData(item),
   };
 };
@@ -75,7 +73,9 @@ export const useHpaList = (query: Record<string, any>, options: Record<string, a
       const formattedParams = formatFetchListParams(module, params);
       const { headers, ...params1 } = getFilterParams(formattedParams);
       const apiVersion = getApiVersion(module, globals.clusterConfig?.[cluster!]?.k8sVersion);
-      const url = `/clusters/${cluster}/kapis/${apiVersion}/namespaces/${namespace}/horizontalpodautoscalers`;
+      const url = namespace
+        ? `/clusters/${cluster}/kapis/${apiVersion}/namespaces/${namespace}/horizontalpodautoscalers`
+        : `/clusters/${cluster}/kapis/${apiVersion}/horizontalpodautoscalers`;
       const result: any =
         (await request.get(url, {
           params: params1,
@@ -84,7 +84,7 @@ export const useHpaList = (query: Record<string, any>, options: Record<string, a
 
       const data = (result.items || []).map((item: Record<string, unknown>) => ({
         cluster,
-        namespace,
+        namespace: namespace ? namespace : get(item, 'metadata.namespace', ''),
         ...item,
         ...mapper(item as unknown as HpaItem),
       }));
