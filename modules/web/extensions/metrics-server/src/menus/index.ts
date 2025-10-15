@@ -48,6 +48,7 @@ export const menus = [
     title: 'hpa.menu.parent.title',
     icon: 'stretch',
     order: 4,
+    skipIfExist: true,
   },
   {
     parent: 'workspace',
@@ -55,6 +56,7 @@ export const menus = [
     title: 'hpa.menu.parent.title',
     icon: 'stretch',
     order: 2,
+    skipIfExist: true,
   },
   {
     parent: 'workspace.elastic_scaling',
