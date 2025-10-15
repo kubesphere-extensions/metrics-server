@@ -59,7 +59,13 @@ export function HpaStatus({ status, onClick }: HpaStatusProps) {
             <ul>
               <li>{t('STATUS_VALUE', { value: item.status })}</li>
               <li>{item.reason && t('REASON_VALUE', { value: item.reason })}</li>
-              <li>{item.message && t('MESSAGE_VALUE', { value: item.message })}</li>
+              <li>
+                {item.message &&
+                  t('MESSAGE_VALUE', {
+                    value: item.message,
+                    interpolation: { escapeValue: false },
+                  })}
+              </li>
             </ul>
           </TextItem>
         ))}
