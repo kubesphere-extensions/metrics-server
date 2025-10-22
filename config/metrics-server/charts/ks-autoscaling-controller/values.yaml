@@ -10,8 +10,9 @@ imagePullSecrets: []
 nameOverride: ""
 
 extraArgs: []
-# - '--enable-hpa'
 # - '--enable-keda' 
+# - '--enable-hpa'
+# - '--enable-vpa'
 
 replicaCount: 1
 

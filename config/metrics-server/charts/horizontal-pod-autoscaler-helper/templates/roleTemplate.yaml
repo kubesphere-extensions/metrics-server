@@ -1,0 +1,121 @@
+{{- if .Values.roleTemplate.enabled }}
+---
+{{- $existing := lookup "iam.kubesphere.io/v1beta1" "Category" "" "cluster-autoscaling-management" -}}
+
+{{- if not $existing }}
+apiVersion: iam.kubesphere.io/v1beta1
+kind: Category
+metadata:
+  name: cluster-autoscaling-management
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+    iam.kubesphere.io/scope: cluster
+    kubesphere.io/managed: "true"
+spec:
+  displayName:
+    en: AutoScaling
+    zh: 弹性伸缩
+{{- end }}
+---
+apiVersion: iam.kubesphere.io/v1beta1
+kind: RoleTemplate
+metadata:
+  annotations:
+    iam.kubesphere.io/role-template-rules: '{"autoscaling": "view"}'
+  labels:
+    iam.kubesphere.io/aggregate-to-cluster-viewer: ""
+    iam.kubesphere.io/category: cluster-autoscaling-management
+    iam.kubesphere.io/scope: cluster
+    kubesphere.io/managed: "true"
+  name: cluster-view-hpa
+spec:
+  description:
+    en: View cluster Horizontal Pod Autoscaler.
+    zh: 集群容器水平伸缩查看。
+  displayName:
+    en:  Horizontal Pod Autoscaler Viewing
+    zh: 容器水平伸缩查看
+  rules: []
+---
+apiVersion: iam.kubesphere.io/v1beta1
+kind: RoleTemplate
+metadata:
+  annotations:
+    iam.kubesphere.io/dependencies: '["cluster-view-hpa"]'
+    iam.kubesphere.io/role-template-rules: '{"autoscaling": "manage"}'
+  labels:
+    iam.kubesphere.io/category: cluster-autoscaling-management
+    iam.kubesphere.io/scope: cluster
+    kubesphere.io/managed: "true"
+  name: cluster-manage-hpa
+spec:
+  description:
+    en: cluster Horizontal Pod Autoscaler management.
+    zh: 集群容器水平伸缩管理。
+  displayName:
+    en: Horizontal Pod Autoscaler Management
+    zh: 容器水平伸缩管理
+  rules: []
+
+---
+{{- $existing := lookup "iam.kubesphere.io/v1beta1" "Category" "" "namespace-autoscaling-management" -}}
+
+{{- if not $existing }}
+apiVersion: iam.kubesphere.io/v1beta1
+kind: Category
+metadata:
+  name: namespace-autoscaling-management
+  labels:
+    iam.kubesphere.io/scope: namespace
+    kubesphere.io/managed: 'true'
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  displayName:
+    en: AutoScaling
+    zh: 弹性伸缩
+{{- end }}
+---
+apiVersion: iam.kubesphere.io/v1beta1
+kind: RoleTemplate
+metadata:
+  annotations:
+    iam.kubesphere.io/role-template-rules: '{"autoscaling": "view"}'
+  labels:
+    iam.kubesphere.io/aggregate-to-viewer: ""
+    iam.kubesphere.io/aggregate-to-operator: ""
+    iam.kubesphere.io/category: namespace-autoscaling-management
+    iam.kubesphere.io/scope: namespace
+    kubesphere.io/managed: "true"
+  name: namespace-view-hpa
+spec:
+  description:
+    en: View namespace Horizontal Pod Autoscaler.
+    zh: 项目容器水平伸缩查看。
+  displayName:
+    en: Horizontal Pod Autoscaler Viewing
+    zh: 容器水平伸缩查看
+  rules: []
+---
+apiVersion: iam.kubesphere.io/v1beta1
+kind: RoleTemplate
+metadata:
+  annotations:
+    iam.kubesphere.io/dependencies: '["namespace-view-hpa"]'
+    iam.kubesphere.io/role-template-rules: '{"autoscaling": "manage"}'
+  labels:
+    iam.kubesphere.io/aggregate-to-operator: ""
+    iam.kubesphere.io/category: namespace-autoscaling-management
+    iam.kubesphere.io/scope: namespace
+    kubesphere.io/managed: "true"
+  name: namespace-manage-hpa
+spec:
+  description:
+    en: Namespace Horizontal Pod Autoscaler management.
+    zh: 项目容器水平伸缩管理。
+  displayName:
+    en: Horizontal Pod Autoscaler Management
+    zh: 容器水平伸缩管理
+  rules: []
+{{- end }}  

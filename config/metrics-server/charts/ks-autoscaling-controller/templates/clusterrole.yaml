@@ -49,4 +49,12 @@ rules:
   verbs:
   - '*'
 {{- end -}}
+{{- if has "--enable-vpa" .Values.extraArgs }}
+- apiGroups:
+  - "autoscaling.k8s.io"
+  resources:
+  - verticalpodautoscalers
+  verbs:
+  - '*'
+{{- end -}}
 {{- end -}}

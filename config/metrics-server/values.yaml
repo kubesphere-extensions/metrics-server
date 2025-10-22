@@ -12,7 +12,7 @@ metrics-server:
   image:
     registry: docker.io
     repository: kubesphere/metrics-server
-    # tag: "v0.7.2"
+    # tag: "v0.8.0"
 
   args:
   - --kubelet-insecure-tls
@@ -36,9 +36,10 @@ frontend:
     repository: kubesphere/metrics-server-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    # tag: "v1.0.1"  
+    tag: "main"  
 
 ks-autoscaling-controller:
+  nameOverride: "controller"
   extraArgs:
   - '--enable-hpa'
 
@@ -46,7 +47,7 @@ ks-autoscaling-controller:
     registry: docker.io
     repository: kubesphere/ks-autoscaling-controller
     # Overrides the image tag whose default is the chart appVersion.
-    # tag: "v1.0.0"
+    tag: "v1.1.0-beta.1"
 
   resources:
     limits:
