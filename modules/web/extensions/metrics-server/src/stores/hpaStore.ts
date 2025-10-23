@@ -145,10 +145,10 @@ const createHpaStore = (workloadDetail: any = {}) =>
         set(draft => {
           const mergedData = merge({}, draft.hpaData, newData);
           if (newData.metadata?.ownerReferences) {
-            mergedData.metadata.ownerReferences = newData.metadata.ownerReferences;
+            mergedData.metadata.ownerReferences = newData.metadata.ownerReferences as any;
           }
           if (newData.spec?.metrics) {
-            mergedData.spec.metrics = newData.spec.metrics;
+            mergedData.spec.metrics = newData.spec.metrics as any;
           }
           draft.hpaData = mergedData;
         }),

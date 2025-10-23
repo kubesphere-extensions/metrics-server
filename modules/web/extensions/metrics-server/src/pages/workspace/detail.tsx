@@ -13,13 +13,14 @@ import { useHpaDetail } from '../../data/useHpaDetail';
 import { isEmpty, get } from 'lodash';
 import { useParams } from 'react-router-dom';
 import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
-import { Stretch, Pen, Trash } from '@kubed/icons';
+import { Pen, Trash } from '@kubed/icons';
 import { DetailPage } from '../../components/DetailPage/DetailPage';
 import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
 import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { useNavigate } from 'react-router-dom';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../../components/Icon/HpaIcon';
 const WorkspaceHpaDetail = () => {
   const { cluster, namespace, workspace, name } = useParams();
   const [detail, setDetail] = useStore<any>('hpaDetail');
@@ -173,7 +174,7 @@ const WorkspaceHpaDetail = () => {
         cardProps={{
           name: getDisplayName(detail),
           desc: detail?.description,
-          icon: <Stretch size={40} />,
+          icon: <HpaIcon />,
           attrs: getAttrs(),
           actions,
           params: { cluster, workspace, namespace },

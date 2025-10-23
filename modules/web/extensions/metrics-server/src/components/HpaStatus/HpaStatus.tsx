@@ -54,14 +54,14 @@ export function HpaStatus({ status, onClick }: HpaStatusProps) {
           <TextItem key={index}>
             <TextItemTitle>
               {renderIconItem(item.statusForShow)}
-              <span>{STATUS_TITLE[item.type]}</span>
+              <span>{t(STATUS_TITLE[item.type])}</span>
             </TextItemTitle>
             <ul>
-              <li>{t('STATUS_VALUE', { value: item.status })}</li>
-              <li>{item.reason && t('REASON_VALUE', { value: item.reason })}</li>
+              <li>{t('hpa.common.statusValue', { value: item.status })}</li>
+              <li>{item.reason && t('hpa.common.reasonValue', { value: item.reason })}</li>
               <li>
                 {item.message &&
-                  t('MESSAGE_VALUE', {
+                  t('hpa.common.messageValue', {
                     value: item.message,
                     interpolation: { escapeValue: false },
                   })}

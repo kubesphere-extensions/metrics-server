@@ -47,7 +47,7 @@ export const WorkloadHpaDetailSheet = (props: WorkloadHpaSheetProps) => {
         >
           <SheetContentChildrenWrapper>
             <SheetHeader>
-              <SheetFieldTitle title={'容器水平伸缩'} />
+              <SheetFieldTitle title={t('hpa.title')} />
             </SheetHeader>
             <Content>
               <WorkloadHpaDetail

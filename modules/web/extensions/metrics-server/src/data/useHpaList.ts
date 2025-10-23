@@ -56,7 +56,11 @@ const mapper = (item: HpaItem) => {
     minReplicas: spec.minReplicas,
     maxReplicas: spec.maxReplicas,
     cpuTargetUtilization: findTargetMetric(spec?.metrics, 'cpu')?.target?.averageUtilization ?? '',
-    memoryTargetValue: findTargetMetric(spec?.metrics, 'memory')?.target?.averageValue ?? '',
+    // todo
+    memoryTargetValue:
+      findTargetMetric(spec?.metrics, 'memory')?.target?.averageValue ||
+      findTargetMetric(spec?.metrics, 'memory')?.target?.averageUtilization ||
+      '',
     cpuCurrentUtilization:
       findCurrentMetric(status?.currentMetrics, 'cpu')?.averageUtilization ?? 0,
     memoryCurrentValue: findCurrentMetric(status?.currentMetrics, 'memory')?.averageValue ?? 0,

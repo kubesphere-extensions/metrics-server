@@ -30,6 +30,8 @@ import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
 import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../../components/Icon/HpaIcon';
+import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
 const TableWrapper = styled.div`
   .table {
     width: 100%;
@@ -197,7 +199,7 @@ const ClusterHpaList = () => {
         return (
           <Avatar
             to={`/clusters/${cluster}/projects/${info.row.original.namespace}/hpa-detail/${info.row.original.name}`}
-            icon={<Stretch size={40} />}
+            icon={<HpaIcon />}
             title={<a>{getDisplayName(info.row.original)}</a>}
             description={info.row.original.description}
           />
@@ -228,7 +230,12 @@ const ClusterHpaList = () => {
       cell: info => {
         const name = get(info.row.original, '_originData.spec.scaleTargetRef.name');
         const type = get(info.row.original, '_originData.spec.scaleTargetRef.kind');
-        return <Field label={type} value={name}></Field>;
+        return (
+          <Field
+            label={t(WORKLOAD_KIND_TEXT_MAP[type as keyof typeof WORKLOAD_KIND_TEXT_MAP])}
+            value={name}
+          ></Field>
+        );
       },
     },
     {

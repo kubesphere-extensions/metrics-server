@@ -2,7 +2,6 @@ export const menus = [
   {
     parent: 'pageNav.workspace.workloads.deployments-detail',
     name: 'metrics-server',
-    icon: 'SmcDuotone',
     clusterModule: 'metrics-server',
     title: 'hpa.title',
     order: 5,
@@ -12,7 +11,6 @@ export const menus = [
   {
     parent: 'pageNav.workspace.workloads.statefulsets-detail',
     name: 'metrics-server',
-    icon: 'SmcDuotone',
     clusterModule: 'metrics-server',
     title: 'hpa.title',
     order: 5,
@@ -22,25 +20,23 @@ export const menus = [
   {
     parent: 'pageNav.cluster.deployments.detail',
     name: 'metrics-server',
-    icon: 'SmcDuotone',
     ksModule: 'metrics-server',
     clusterModule: 'metrics-server',
     title: 'hpa.title',
     action: 'edit',
     order: 5,
     actionType: 'modal',
-    actionValue: 'pageNav://pageNav.workspace.workloads.deployments-detail.metrics-server',
+    actionValue: 'pageNav://pageNav.cluster.deployments.detail.metrics-server',
   },
   {
     parent: 'pageNav.cluster.statefulsets.detail',
     name: 'metrics-server',
-    icon: 'SmcDuotone',
     clusterModule: 'metrics-server',
     title: 'hpa.title',
     action: 'edit',
     order: 5,
     actionType: 'modal',
-    actionValue: 'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server',
+    actionValue: 'pageNav://pageNav.cluster.statefulsets.detail.metrics-server',
   },
   {
     parent: 'cluster',
@@ -63,7 +59,6 @@ export const menus = [
     name: 'hpa-list',
     title: 'hpa.title',
     authKey: 'metrics-server',
-    icon: 'stretch',
     skipWorkspaceAuth: true,
   },
   {
@@ -71,7 +66,6 @@ export const menus = [
     name: 'hpa-list',
     title: 'hpa.title',
     authKey: 'metrics-server',
-    icon: 'stretch',
     skipWorkspaceAuth: true,
   },
 ];

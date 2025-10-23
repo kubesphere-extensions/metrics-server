@@ -244,7 +244,10 @@ const HpaScalerSettingModal = ({ params, onOk, onCancel, open, hpaDetail }: HpaF
               </div>
             ) : null}
           </Field>
-          <Toggle>
+          <Toggle
+            label={t('hpa.advanceSettings.title')}
+            description={t('hpa.advanceSettings.description')}
+          >
             <FormContent>
               <div style={{ marginBottom: 8, fontWeight: 600 }}>
                 {t('hpa.advanceSettings.scaleUp.title')}

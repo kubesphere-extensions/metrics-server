@@ -9,6 +9,9 @@ import { getWorkloadStatus, StatusIndicator } from '@ks-console/shared';
 import { get } from 'lodash';
 import { Tooltip } from '@kubed/components';
 import styled from 'styled-components';
+import { HpaIcon } from '../Icon/HpaIcon';
+import { VpaIcon } from '../Icon/VpaIcon';
+import { EventIcon } from '../Icon/EventIcon';
 
 const Flex = styled.div`
   display: flex;
@@ -57,20 +60,26 @@ const WorkloadStatus = ({ workloadItem, module }: WorkloadStatusProps) => {
       >
         {t(status.toUpperCase())}
       </StatusIndicator>
-      {get(workloadItem, 'labels["hpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true' && (
+      {get(workloadItem, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true' && (
         <Tooltip content={t('hpa.hpaSetTip')}>
-          <TimedTask />
+          <span style={{ display: 'inline-flex' }}>
+            <HpaIcon size={20} />
+          </span>
         </Tooltip>
       )}
-      {get(workloadItem, 'labels["keda.autoscaling.kubeshpere.io/managed"]', 'false') ===
+      {get(workloadItem, 'labels["keda.autoscaling.kubesphere.io/managed"]', 'false') ===
         'true' && (
         <Tooltip content={t('hpa.customScalingSetTip')}>
-          <Stretch size={20} />
+          <span style={{ display: 'inline-flex' }}>
+            <EventIcon size={20} />
+          </span>
         </Tooltip>
       )}
-      {get(workloadItem, 'labels["vpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true' && (
+      {get(workloadItem, 'labels["vpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true' && (
         <Tooltip content={t('hpa.vpaSetTip')}>
-          <Stretch size={20} />
+          <span style={{ display: 'inline-flex' }}>
+            <VpaIcon size={20} />
+          </span>
         </Tooltip>
       )}
     </Flex>

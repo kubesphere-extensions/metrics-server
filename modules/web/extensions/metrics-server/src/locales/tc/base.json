@@ -6,6 +6,10 @@
   "hpa.validation.minimumReplicas.required": "最小副本數不能爲空",
   "hpa.validation.maximumReplicas.required": "最大副本數不能爲空",
   "hpa.validation.metrics.required": "請至少填寫一個指標值",
+  "hpa.common.statusValue": "狀態：{value}",
+  "hpa.common.reasonValue": "原因：{value}",
+  "hpa.common.messageValue": "消息：{value}",
+  "hpa.common.noData": "暫無數據",
   "hpa.common.resourceStatus": "資源狀態",
   "hpa.common.cluster": "集羣",
   "hpa.common.events": "事件",
@@ -95,5 +99,11 @@
   "hpa.advanceSettings.stabilizationWindowSeconds": "穩定窗口時間 (s)",
   "hpa.advanceSettings.stabilizationWindowSeconds.help": "當用於擴縮的指標不斷波動時，穩定窗口用於限制副本計數的波動。",
   "hpa.advanceSettings.value": "擴容值",
-  "hpa.advanceSettings.stabilizationWindowSeconds.value": "激活時間 (s)"
+  "hpa.advanceSettings.stabilizationWindowSeconds.value": "激活時間 (s)",
+  "hpa.scaleTarget.status.ableToScale": "可伸縮",
+  "hpa.scaleTarget.status.scalingActive": "指標有效",
+  "hpa.scaleTarget.status.scalingLimited": "副本不受限",
+  "hpa.scaleTarget.status.ableToScale.description": "是否允許新的彈性伸縮操作",
+  "hpa.scaleTarget.status.scalingActive.description": "是否成功獲取有效指標並計算期望副本數",
+  "hpa.scaleTarget.status.scalingLimited.description": "期望副本數是否受限於最小副本數或最大副本數。"
 }

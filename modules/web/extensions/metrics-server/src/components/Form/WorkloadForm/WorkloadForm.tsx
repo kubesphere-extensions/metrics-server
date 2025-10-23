@@ -40,7 +40,8 @@ const WorkloadForm = ({
   onOk: (item?: any) => void;
   onCancel: () => void;
 }) => {
-  const { extraParams, selectWorkload, updateSelectWorkload, updateHpaData } = useHpaContext();
+  const { extraParams, selectWorkload, updateSelectWorkload, updateHpaData, hpaData } =
+    useHpaContext();
   const [hasError, setHasError] = useState(false);
   const [value, setValue] = React.useState('deployments');
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,7 @@ const WorkloadForm = ({
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
     useWorkloadList({
       cluster: extraParams.cluster,
-      namespace: extraParams.namespace,
+      namespace: hpaData?.metadata?.namespace || extraParams.namespace,
       module: value as 'deployments' | 'statefulsets',
       query: {
         sortBy: 'updateTime',
@@ -122,11 +123,11 @@ const WorkloadForm = ({
         <div style={{ height: '328px', overflowY: 'auto' }}>
           {data?.list.map(item => {
             const hasHpa =
-              get(item, 'labels["hpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             const hasCustomScaling =
-              get(item, 'labels["keda.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["keda.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             const haVpa =
-              get(item, 'labels["vpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["vpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             return (
               <RadioItem
                 disabled={hasHpa || hasCustomScaling || haVpa}

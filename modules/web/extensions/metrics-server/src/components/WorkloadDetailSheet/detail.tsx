@@ -20,21 +20,13 @@ import { HpaYamlModal } from '../Modal/HpaYamlModal';
 import { HpaEditModal } from '../Modal/HpaEditModal/HpaEditModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../Icon/HpaIcon';
 
 const authKey = 'metrics-server';
 
 interface WorkloadHpaDetailProps {
   params?: BasePathParams;
   backTo?: () => void;
-}
-
-interface Detail {
-  status?: any;
-  createTime?: string;
-  creator?: string;
-  labels?: Record<string, string>;
-  annotations?: Record<string, string>;
-  isReady: boolean;
 }
 
 export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
@@ -78,6 +70,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
     const base = {
       name: getDisplayName(detail),
       desc: detail?.description,
+      icon: <HpaIcon />,
       breadcrumbs: {
         label: t('hpa.title'),
         onClick: backTo,
