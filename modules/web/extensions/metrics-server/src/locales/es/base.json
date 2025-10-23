@@ -19,6 +19,8 @@
   "hpa.common.viewEvents": "Ver eventos",
   "hpa.common.loading": "Cargando...",
   "hpa.common.loadMore": "Cargar más",
+  "hpa.common.loadError": "Error al cargar, por favor reintente",
+  "hpa.common.retry": "Reintentar",
   "hpa.common.basicInfo": "Información básica",
   "hpa.common.unCompletedDescription": "No configurado",
   "hpa.common.completedDescription": "Configurado",

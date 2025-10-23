@@ -52,7 +52,7 @@ const WorkloadForm = ({
     { label: t('hpa.common.statefulSet'), value: 'statefulsets' },
   ];
 
-  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage, refetch, error } =
     useWorkloadList({
       cluster: extraParams.cluster,
       namespace: hpaData?.metadata?.namespace || extraParams.namespace,
@@ -65,6 +65,7 @@ const WorkloadForm = ({
     });
 
   const [selectedItem, setSelectedItem] = useState<any>(selectWorkload);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const intersection = useIntersection(loadMoreRef, {
     root: null,
@@ -73,10 +74,21 @@ const WorkloadForm = ({
   });
 
   React.useEffect(() => {
-    if (intersection?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+    if (intersection?.isIntersecting && hasNextPage && !isFetchingNextPage && !error) {
       fetchNextPage();
     }
-  }, [intersection, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [intersection, hasNextPage, isFetchingNextPage, fetchNextPage, error]);
+
+  React.useEffect(() => {
+    setSelectedItem(null);
+  }, [name]);
+
+  React.useEffect(() => {
+    // Reset scroll position when tab or search changes
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [value, name]);
 
   const getKey = (item: any) => {
     if (!item) return '';
@@ -120,8 +132,29 @@ const WorkloadForm = ({
           <Warning2Duotone color="#c7deef" fill="#326e93" />
           <span>{t('hpa.scaleTarget.create.info')}</span>
         </Tips>
-        <div style={{ height: '328px', overflowY: 'auto' }}>
-          {data?.list.map(item => {
+        <div ref={scrollContainerRef} style={{ height: '328px', overflowY: 'auto' }}>
+          {error && (
+            <div
+              style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#bd3633',
+              }}
+            >
+              <Warning2Duotone size={40} color="#bd3633" />
+              <div style={{ marginTop: '8px' }}>
+                {t('hpa.common.loadError')}
+              </div>
+              <Button
+                variant="text"
+                onClick={() => refetch()}
+                style={{ marginTop: '8px' }}
+              >
+                {t('hpa.common.retry')}
+              </Button>
+            </div>
+          )}
+          {!error && data?.list.map(item => {
             const hasHpa =
               get(item, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             const hasCustomScaling =
@@ -152,7 +185,7 @@ const WorkloadForm = ({
             );
           })}
 
-          {hasNextPage && (
+          {!error && hasNextPage && data?.list && data.list.length > 0 && (
             <LoadMore ref={loadMoreRef}>
               {isFetchingNextPage ? (
                 <LoadingContainer>
@@ -165,7 +198,7 @@ const WorkloadForm = ({
             </LoadMore>
           )}
 
-          {isFetching && !isFetchingNextPage && (
+          {!error && isFetching && !isFetchingNextPage && (
             <LoadingContainer>
               <Loading2Duotone size={20} />
               <span style={{ marginLeft: 8 }}>{t('hpa.common.loading')}</span>

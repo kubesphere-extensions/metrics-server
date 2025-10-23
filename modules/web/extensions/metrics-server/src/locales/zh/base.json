@@ -19,6 +19,8 @@
   "hpa.common.viewEvents": "查看事件",
   "hpa.common.loading": "加载中...",
   "hpa.common.loadMore": "滚动加载更多",
+  "hpa.common.loadError": "加载失败，请重试",
+  "hpa.common.retry": "重试",
   "hpa.common.basicInfo": "基本信息",
   "hpa.common.unCompletedDescription": "未设置",
   "hpa.common.completedDescription": "已设置",

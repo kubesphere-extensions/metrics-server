@@ -8,7 +8,7 @@ import {
 } from '@ks-console/shared';
 import { get } from 'lodash';
 
-export const useWorkloadList= ({
+export const useWorkloadList = ({
   cluster,
   namespace,
   module,
@@ -47,12 +47,14 @@ export const useWorkloadList= ({
         ...item,
         _originData: getOriginData(item),
       }));
+      const total = result?.totalItems ?? result?.totalCount ?? result?.total_count ?? 0;
+      const limit = Number(query.limit) || 10;
       return {
         list,
-        total: result?.totalItems ?? result?.totalCount ?? result?.total_count ?? 0,
+        total,
         page: pageParam,
-        limit: Number(query.limit) || 10,
-        hasNext: (result?.items?.length || 0) >= (query.limit || 10),
+        limit,
+        hasNext: pageParam * limit < total,
       };
     },
     getNextPageParam: lastPage => {

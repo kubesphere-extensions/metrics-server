@@ -19,6 +19,8 @@
   "hpa.common.viewEvents": "View Events",
   "hpa.common.loading": "Loading...",
   "hpa.common.loadMore": "Scroll to load more",
+  "hpa.common.loadError": "Loading failed, please retry",
+  "hpa.common.retry": "Retry",
   "hpa.common.basicInfo": "Basic Information",
   "hpa.common.unCompletedDescription": "Not Set",
   "hpa.common.completedDescription": "Set",
