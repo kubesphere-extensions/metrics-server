@@ -252,6 +252,7 @@ interface Metric {
   resource: {
     name: string;
     target?: {
+      type?: string;
       averageUtilization?: number;
       averageValue?: string;
     };
@@ -266,3 +267,85 @@ export const findTargetMetric = (metrics?: Metric[], name?: string) =>
   metrics?.find(m => m.type === 'Resource' && m.resource.name === name)?.resource;
 export const findCurrentMetric = (metrics?: Metric[], name?: string) =>
   metrics?.find(m => m.type === 'Resource' && m.resource.name === name)?.resource?.current;
+
+// ============================================================================
+// HPA Metrics Formatting Utility Functions
+// ============================================================================
+
+type MetricTargetType = 'Utilization' | 'AverageValue' | '';
+
+/**
+ * Format CPU metric value
+ * Display format is determined by the type configured in spec.metrics
+ *
+ * @param value - CPU value (could be number or string)
+ * @param targetType - Configured target type ('Utilization' or 'AverageValue')
+ * @returns Formatted display string
+ *
+ * @example
+ * formatCpuMetricValue(80, 'Utilization')        // => "80%"
+ * formatCpuMetricValue("100m", 'AverageValue')   // => "100m"
+ * formatCpuMetricValue(0, 'Utilization')         // => "0%"
+ * formatCpuMetricValue('', '')                   // => "--"
+ */
+export const formatCpuMetricValue = (
+  value: string | number,
+  targetType: MetricTargetType,
+): string => {
+  // Handle empty values (note that 0 is a valid value)
+  if (!value && value !== 0) return '--';
+
+  // If configured as Utilization type, display as percentage
+  if (targetType === 'Utilization') {
+    return `${value}%`;
+  }
+
+  // If configured as AverageValue type, display directly (e.g., "100m")
+  if (targetType === 'AverageValue') {
+    return String(value);
+  }
+
+  // If no type configured, return original value
+  return value ? String(value) : '--';
+};
+
+/**
+ * Format Memory metric value
+ * Display format is determined by the type configured in spec.metrics
+ *
+ * @param value - Memory value (could be number or string)
+ * @param targetType - Configured target type ('Utilization' or 'AverageValue')
+ * @returns Formatted display string
+ *
+ * @example
+ * formatMemoryMetricValue(80, 'Utilization')     // => "80%"
+ * formatMemoryMetricValue("1Gi", 'AverageValue') // => "1024Mi"
+ * formatMemoryMetricValue("1024", 'AverageValue')// => "0.98Mi"
+ * formatMemoryMetricValue(75, 'AverageValue')    // => "71.53Mi" (fallback value also converted)
+ * formatMemoryMetricValue('', '')                // => "--"
+ */
+export const formatMemoryMetricValue = (
+  value: string | number,
+  targetType: MetricTargetType,
+): string => {
+  // Handle empty values (note that 0 is a valid value)
+  if (!value && value !== 0) return '--';
+
+  // If configured as Utilization type, display as percentage
+  if (targetType === 'Utilization') {
+    return `${value}%`;
+  }
+
+  // If configured as AverageValue type, convert to Mi format
+  if (targetType === 'AverageValue') {
+    // If already a string (with unit), convert to Mi
+    if (typeof value === 'string') {
+      return quantityToMi(value).stringValue;
+    }
+    // If a number, also convert to Mi (could be a utilization value from current fallback)
+    return quantityToMi(String(value)).stringValue;
+  }
+
+  // If no type configured, return original value
+  return value ? String(value) : '--';
+};

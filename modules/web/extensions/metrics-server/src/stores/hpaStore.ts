@@ -2,6 +2,7 @@ import { create, UseBoundStore, StoreApi } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { get, merge } from 'lodash';
 import { PartialDeep } from 'type-fest';
+import type { FormMetrics } from '../components/Modal/helper';
 
 type HpaData = {
   apiVersion: string;
@@ -26,7 +27,7 @@ type HpaData = {
         name: string;
         target: {
           type: string;
-          averageUtilization?: string;
+          averageUtilization?: string | number;
           averageValue?: string;
         };
       };
@@ -62,8 +63,8 @@ type HpaData = {
 };
 
 type HpaStore = {
-  formMetrics: Record<string, any>;
-  updateFormMetrics: (newData: PartialDeep<Record<string, any>>) => void;
+  formMetrics: FormMetrics;
+  updateFormMetrics: (newData: PartialDeep<FormMetrics>) => void;
   selectWorkload: any;
   updateSelectWorkload: (newData: any) => void;
   hpaData: HpaData;
@@ -83,12 +84,12 @@ const createHpaStore = (workloadDetail: any = {}) =>
       formMetrics: {
         cpu: {
           name: 'cpu',
-          type: 'Utilization',
+          type: 'Utilization', // CPU Default to percentage
           value: '',
         },
         memory: {
           name: 'memory',
-          type: 'Utilization',
+          type: 'AverageValue', // Memory Default to absolute value
           value: '',
         },
       },

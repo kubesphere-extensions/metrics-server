@@ -25,7 +25,7 @@ import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
 import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
 
-import { transformBytes } from '../../utils';
+import { formatCpuMetricValue, formatMemoryMetricValue } from '../../utils';
 import { useHpaList } from '../../data/useHpaList';
 import { useDelete } from '../../hooks/useDelete';
 import { createHpaStore } from '../../stores/hpaStore';
@@ -320,11 +320,16 @@ export const WorkSpaceHpaList = () => {
         },
         enableHiding: true,
         cell: info => {
-          const { cpuCurrentUtilization = 0, cpuTargetUtilization = 0 } = info.row.original;
+          const {
+            cpuCurrentUtilization = 0,
+            cpuTargetUtilization = 0,
+            cpuTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-              label={`${t('hpa.common.current')}：${cpuCurrentUtilization}%`}
+              value={formatCpuMetricValue(cpuTargetUtilization, cpuTargetType)}
+              label={`${t('hpa.common.current')}：${formatCpuMetricValue(cpuCurrentUtilization, cpuTargetType)}`}
             />
           );
         },
@@ -339,15 +344,16 @@ export const WorkSpaceHpaList = () => {
         },
         enableHiding: true,
         cell: info => {
-          const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
+          const {
+            memoryCurrentValue = 0,
+            memoryTargetValue = 0,
+            memoryTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={memoryTargetValue}
-              label={
-                memoryCurrentValue
-                  ? `${t('hpa.common.current')}：${transformBytes(memoryCurrentValue)}`
-                  : '--'
-              }
+              value={formatMemoryMetricValue(memoryTargetValue, memoryTargetType)}
+              label={`${t('hpa.common.current')}：${formatMemoryMetricValue(memoryCurrentValue, memoryTargetType)}`}
             />
           );
         },

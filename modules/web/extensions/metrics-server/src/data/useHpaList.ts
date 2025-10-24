@@ -51,19 +51,54 @@ const mapper = (item: HpaItem) => {
   const spec = item.spec || { minReplicas: 0, maxReplicas: 0 };
   const { status } = item;
 
+  // Get Memory's configured type
+  const memoryMetric = findTargetMetric(spec?.metrics, 'memory');
+  const memoryTargetType = memoryMetric?.target?.type || '';
+
+  // Helper function: extract target metric value based on configured type
+  const getTargetValue = (metricName: string): string | number => {
+    const metric = findTargetMetric(spec?.metrics, metricName);
+    if (!metric?.target) return '';
+
+    // Prefer averageUtilization (percentage), otherwise return averageValue (absolute value)
+    return metric.target.averageUtilization ?? metric.target.averageValue ?? '';
+  };
+
+  // Helper function: extract current metric value based on configured type
+  // Prioritize value that matches the target type
+  const getCurrentValue = (metricName: string, targetType?: string): string | number => {
+    const metric = findCurrentMetric(status?.currentMetrics, metricName);
+    if (!metric) return 0;
+
+    // If target type is specified, prefer the corresponding type value
+    if (targetType === 'Utilization') {
+      return metric.averageUtilization ?? metric.averageValue ?? 0;
+    } else if (targetType === 'AverageValue') {
+      return metric.averageValue ?? metric.averageUtilization ?? 0;
+    }
+
+    // Default: prefer averageUtilization, otherwise return averageValue
+    return metric.averageUtilization ?? metric.averageValue ?? 0;
+  };
+
+  // Get CPU's configured type
+  const cpuMetric = findTargetMetric(spec?.metrics, 'cpu');
+  const cpuTargetType = cpuMetric?.target?.type || '';
+
   return {
     ...baseInfo,
     minReplicas: spec.minReplicas,
     maxReplicas: spec.maxReplicas,
-    cpuTargetUtilization: findTargetMetric(spec?.metrics, 'cpu')?.target?.averageUtilization ?? '',
-    // todo
-    memoryTargetValue:
-      findTargetMetric(spec?.metrics, 'memory')?.target?.averageValue ||
-      findTargetMetric(spec?.metrics, 'memory')?.target?.averageUtilization ||
-      '',
-    cpuCurrentUtilization:
-      findCurrentMetric(status?.currentMetrics, 'cpu')?.averageUtilization ?? 0,
-    memoryCurrentValue: findCurrentMetric(status?.currentMetrics, 'memory')?.averageValue ?? 0,
+    // CPU target value (could be percentage or absolute value)
+    cpuTargetUtilization: getTargetValue('cpu'),
+    cpuTargetType, // Add type information
+    // Memory target value (could be percentage or absolute value)
+    memoryTargetValue: getTargetValue('memory'),
+    memoryTargetType, // Add type information
+    // CPU current value (prefer value that matches target type)
+    cpuCurrentUtilization: getCurrentValue('cpu', cpuTargetType),
+    // Memory current value (prefer value that matches target type)
+    memoryCurrentValue: getCurrentValue('memory', memoryTargetType),
     _originData: getOriginData(item),
   };
 };
