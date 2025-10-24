@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Modal, Steps, TabStep, Button, Switch } from '@kubed/components';
 import { Appcenter } from '@kubed/icons';
 import { CreateBasicInfoForm } from '../../Form/CreateBasicInfoForm/CreateBasicInfoForm';
@@ -12,7 +12,7 @@ import { isK8sVersionAbove } from '@ks-console/shared';
 import { quantityToMi } from '../../../utils';
 import { AdvancedForm } from '../../Form/AdvancedForm/AdvancedForm';
 import { useHpaCreateMutation } from '../../../data/useHpaCreateMutation';
-import { convertMetrics } from '../helper';
+import { convertMetrics, convertToFormMetrics, validateFormMetrics } from '../helper';
 type HpaCreateModalProps = {
   onOk: () => void;
   onCancel: () => void;
@@ -58,6 +58,11 @@ const HpaCreateModal = ({
 
   const [isYamlMode, setIsYamlMode] = useState(false);
 
+  // Performance optimization: cache conversion result with useMemo to avoid unnecessary recalculations
+  const convertedMetrics = useMemo(() => {
+    return convertMetrics(formMetrics);
+  }, [formMetrics]);
+
   const ModalFooter = () => {
     return isYamlMode ? (
       <Button
@@ -87,20 +92,22 @@ const HpaCreateModal = ({
               if (active === 0) {
                 baseInfoFromRef?.current?.form.submit();
               } else if (active === 1) {
-                if (formMetrics.cpu.value === '' && formMetrics.memory.value === '') {
+                // Use new validation function instead of simple null check
+                const validation = validateFormMetrics(formMetrics);
+                if (!validation.valid) {
                   setHasMetricError(true);
                   return;
-                } else {
-                  setHasMetricError(false);
-                  scalerSettingFromRef?.current?.form.submit();
-                  const metrics = convertMetrics(formMetrics);
-                  updateHpaData({
-                    apiVersion,
-                    spec: {
-                      metrics,
-                    },
-                  });
                 }
+
+                setHasMetricError(false);
+                scalerSettingFromRef?.current?.form.submit();
+                // Use cached conversion result to avoid redundant calculations
+                updateHpaData({
+                  apiVersion,
+                  spec: {
+                    metrics: convertedMetrics,
+                  },
+                });
               }
             }}
             color="secondary"
@@ -131,39 +138,33 @@ const HpaCreateModal = ({
 
   const handleYamlModeChange = (checked: boolean) => {
     if (checked) {
-      // convert formData to yaml
-      const metrics = convertMetrics(formMetrics);
+      // Switch from form mode to YAML mode: convert formMetrics to K8s metrics
+      // Use cached conversion result
       updateHpaData({
         apiVersion,
         spec: {
-          metrics,
+          metrics: convertedMetrics,
         },
       });
     } else {
+      // Switch from YAML mode back to form mode: convert K8s metrics back to formMetrics
       const metrics = hpaData.spec.metrics;
-      const cpuMetric = metrics.find((metric: any) => metric.resource.name === 'cpu');
-      const memoryMetric = metrics.find((metric: any) => metric.resource.name === 'memory');
-      const cpuMetricType = cpuMetric?.resource.target?.type;
-      const memoryMetricType = memoryMetric?.resource.target?.type;
-      const cpuMetricValue =
-        cpuMetric?.resource.target?.averageUtilization ||
-        cpuMetric?.resource.target?.averageValue ||
-        '';
-      const memoryMetricValue =
-        memoryMetric?.resource.target?.averageUtilization ||
-        quantityToMi(memoryMetric?.resource.target?.averageValue).value ||
-        '';
 
-      const formDataMetrics = {
-        cpu: {
-          type: cpuMetricType,
-          value: cpuMetricValue,
-        },
-        memory: {
-          type: memoryMetricType,
-          value: memoryMetricValue,
-        },
-      };
+      // Use new convertToFormMetrics function instead of manual conversion logic
+      let formDataMetrics = convertToFormMetrics(metrics);
+
+      // Special handling for Memory: need to use quantityToMi to convert units
+      const memoryMetric = metrics.find((metric: any) => metric.resource?.name === 'memory');
+      if (memoryMetric?.resource?.target?.averageValue) {
+        formDataMetrics = {
+          ...formDataMetrics,
+          memory: {
+            ...formDataMetrics.memory,
+            value: quantityToMi(memoryMetric.resource.target.averageValue).value,
+          },
+        };
+      }
+
       updateFormMetrics(formDataMetrics);
     }
     setIsYamlMode(checked);

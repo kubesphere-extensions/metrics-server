@@ -40,7 +40,8 @@ const WorkloadForm = ({
   onOk: (item?: any) => void;
   onCancel: () => void;
 }) => {
-  const { extraParams, selectWorkload, updateSelectWorkload, updateHpaData } = useHpaContext();
+  const { extraParams, selectWorkload, updateSelectWorkload, updateHpaData, hpaData } =
+    useHpaContext();
   const [hasError, setHasError] = useState(false);
   const [value, setValue] = React.useState('deployments');
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -51,10 +52,10 @@ const WorkloadForm = ({
     { label: t('hpa.common.statefulSet'), value: 'statefulsets' },
   ];
 
-  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage, refetch, error } =
     useWorkloadList({
       cluster: extraParams.cluster,
-      namespace: extraParams.namespace,
+      namespace: hpaData?.metadata?.namespace || extraParams.namespace,
       module: value as 'deployments' | 'statefulsets',
       query: {
         sortBy: 'updateTime',
@@ -64,6 +65,7 @@ const WorkloadForm = ({
     });
 
   const [selectedItem, setSelectedItem] = useState<any>(selectWorkload);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const intersection = useIntersection(loadMoreRef, {
     root: null,
@@ -72,10 +74,21 @@ const WorkloadForm = ({
   });
 
   React.useEffect(() => {
-    if (intersection?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+    if (intersection?.isIntersecting && hasNextPage && !isFetchingNextPage && !error) {
       fetchNextPage();
     }
-  }, [intersection, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [intersection, hasNextPage, isFetchingNextPage, fetchNextPage, error]);
+
+  React.useEffect(() => {
+    setSelectedItem(null);
+  }, [name]);
+
+  React.useEffect(() => {
+    // Reset scroll position when tab or search changes
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [value, name]);
 
   const getKey = (item: any) => {
     if (!item) return '';
@@ -119,14 +132,35 @@ const WorkloadForm = ({
           <Warning2Duotone color="#c7deef" fill="#326e93" />
           <span>{t('hpa.scaleTarget.create.info')}</span>
         </Tips>
-        <div style={{ height: '328px', overflowY: 'auto' }}>
-          {data?.list.map(item => {
+        <div ref={scrollContainerRef} style={{ height: '328px', overflowY: 'auto' }}>
+          {error && (
+            <div
+              style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#bd3633',
+              }}
+            >
+              <Warning2Duotone size={40} color="#bd3633" />
+              <div style={{ marginTop: '8px' }}>
+                {t('hpa.common.loadError')}
+              </div>
+              <Button
+                variant="text"
+                onClick={() => refetch()}
+                style={{ marginTop: '8px' }}
+              >
+                {t('hpa.common.retry')}
+              </Button>
+            </div>
+          )}
+          {!error && data?.list.map(item => {
             const hasHpa =
-              get(item, 'labels["hpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             const hasCustomScaling =
-              get(item, 'labels["keda.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["keda.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             const haVpa =
-              get(item, 'labels["vpa.autoscaling.kubeshpere.io/managed"]', 'false') === 'true';
+              get(item, 'labels["vpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
             return (
               <RadioItem
                 disabled={hasHpa || hasCustomScaling || haVpa}
@@ -151,7 +185,7 @@ const WorkloadForm = ({
             );
           })}
 
-          {hasNextPage && (
+          {!error && hasNextPage && data?.list && data.list.length > 0 && (
             <LoadMore ref={loadMoreRef}>
               {isFetchingNextPage ? (
                 <LoadingContainer>
@@ -164,7 +198,7 @@ const WorkloadForm = ({
             </LoadMore>
           )}
 
-          {isFetching && !isFetchingNextPage && (
+          {!error && isFetching && !isFetchingNextPage && (
             <LoadingContainer>
               <Loading2Duotone size={20} />
               <span style={{ marginLeft: 8 }}>{t('hpa.common.loading')}</span>

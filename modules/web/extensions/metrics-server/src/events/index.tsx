@@ -1,8 +1,9 @@
-import { SmcDuotone } from '@kubed/icons';
 import { get, pick } from 'lodash';
-import { default as React } from 'react';
+import React from 'react';
 import { HpaModal } from '../components/WorkloadSheet';
 import { hasClusterModule } from '@ks-console/shared';
+import { HpaIcon } from '../components/Icon/HpaIcon';
+import { Tooltip } from '@kubed/components';
 
 export const events = {
   // events
@@ -13,7 +14,7 @@ export const events = {
     ) => {
       const kedaContext = get(
         context,
-        'detail._originData.metadata.labels["keda.autoscaling.kubeshpere.io/managed"]',
+        'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
 
       const disabled = kedaContext === 'true' || kedaContext === true;
@@ -21,7 +22,7 @@ export const events = {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <SmcDuotone size={40} />,
+        icon: <HpaIcon size={40} />,
       };
     },
     'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server': (
@@ -30,14 +31,40 @@ export const events = {
     ) => {
       const kedaContext = get(
         context,
-        'detail._originData.metadata.labels["keda.autoscaling.kubeshpere.io/managed"]',
+        'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
       const disabled = kedaContext === 'true' || kedaContext === true;
       return {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <SmcDuotone size={40} />,
+        icon: <HpaIcon size={40} />,
+      };
+    },
+    'pageNav://pageNav.cluster.deployments.detail.metrics-server': (point: any, context: any) => {
+      const kedaContext = get(
+        context,
+        'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
+      );
+      const disabled = kedaContext === 'true' || kedaContext === true;
+      return {
+        ...point,
+        disabled,
+        show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
+        icon: <HpaIcon size={40} />,
+      };
+    },
+    'pageNav://pageNav.cluster.statefulsets.detail.metrics-server': (point: any, context: any) => {
+      const kedaContext = get(
+        context,
+        'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
+      );
+      const disabled = kedaContext === 'true' || kedaContext === true;
+      return {
+        ...point,
+        disabled,
+        show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
+        icon: <HpaIcon size={40} />,
       };
     },
   },
@@ -64,5 +91,27 @@ export const events = {
         module: 'statefulsets',
       });
     },
+    'pageNav://pageNav.cluster.deployments.detail.metrics-server': (
+      modalDispatch: any,
+      context: any,
+    ) => {
+      modalDispatch.show('open.cluster.hpa', {
+        modal: HpaModal,
+        detail: context.detail,
+        params: pick(context.detail, ['name', 'cluster', 'namespace', 'workspace']),
+        module: 'deployments',
+      });
+    },
+  },
+  'pageNav://pageNav.cluster.statefulsets.detail.metrics-server': (
+    modalDispatch: any,
+    context: any,
+  ) => {
+    modalDispatch.show('open.cluster.hpa', {
+      modal: HpaModal,
+      detail: context.detail,
+      params: pick(context.detail, ['name', 'cluster', 'namespace', 'workspace']),
+      module: 'statefulsets',
+    });
   },
 };

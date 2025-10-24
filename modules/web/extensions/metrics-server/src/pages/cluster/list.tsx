@@ -16,20 +16,22 @@ import {
 } from '@ks-console/shared';
 import { Card, DataTable, Field } from '@kubed/components';
 import { ColumnDef, Table } from '@tanstack/react-table';
-import { Pen, Trash, Stretch } from '@kubed/icons';
+import { Pen, Trash } from '@kubed/icons';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useHpaList } from '../../data/useHpaList';
 import { get } from 'lodash';
 import { useProjectSelect } from '../../hooks/useProjectSelect';
 import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
-import { transformBytes } from '../../utils';
+import { formatCpuMetricValue, formatMemoryMetricValue } from '../../utils';
 import { HpaCreateModal } from '../../components/Modal/HpaCreateModal/HpaCreateModal';
 import { createHpaStore } from '../../stores/hpaStore';
 import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
 import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../../components/Icon/HpaIcon';
+import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
 const TableWrapper = styled.div`
   .table {
     width: 100%;
@@ -197,7 +199,7 @@ const ClusterHpaList = () => {
         return (
           <Avatar
             to={`/clusters/${cluster}/projects/${info.row.original.namespace}/hpa-detail/${info.row.original.name}`}
-            icon={<Stretch size={40} />}
+            icon={<HpaIcon />}
             title={<a>{getDisplayName(info.row.original)}</a>}
             description={info.row.original.description}
           />
@@ -228,7 +230,12 @@ const ClusterHpaList = () => {
       cell: info => {
         const name = get(info.row.original, '_originData.spec.scaleTargetRef.name');
         const type = get(info.row.original, '_originData.spec.scaleTargetRef.kind');
-        return <Field label={type} value={name}></Field>;
+        return (
+          <Field
+            label={t(WORKLOAD_KIND_TEXT_MAP[type as keyof typeof WORKLOAD_KIND_TEXT_MAP])}
+            value={name}
+          ></Field>
+        );
       },
     },
     {
@@ -241,11 +248,12 @@ const ClusterHpaList = () => {
       },
       enableHiding: true,
       cell: info => {
-        const { cpuCurrentUtilization = 0, cpuTargetUtilization = 0 } = info.row.original;
+        const { cpuCurrentUtilization, cpuTargetUtilization, cpuTargetType } = info.row.original;
+
         return (
           <Field
-            value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-            label={`${t('hpa.common.current')}：${cpuCurrentUtilization}%`}
+            value={formatCpuMetricValue(cpuTargetUtilization, cpuTargetType)}
+            label={`${t('hpa.common.current')}：${formatCpuMetricValue(cpuCurrentUtilization, cpuTargetType)}`}
           />
         );
       },
@@ -260,15 +268,12 @@ const ClusterHpaList = () => {
       },
       enableHiding: true,
       cell: info => {
-        const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
+        const { memoryCurrentValue, memoryTargetValue, memoryTargetType } = info.row.original;
+
         return (
           <Field
-            value={memoryTargetValue}
-            label={
-              memoryCurrentValue
-                ? `${t('hpa.common.current')}：${transformBytes(memoryCurrentValue)}`
-                : '--'
-            }
+            value={formatMemoryMetricValue(memoryTargetValue, memoryTargetType)}
+            label={`${t('hpa.common.current')}：${formatMemoryMetricValue(memoryCurrentValue, memoryTargetType)}`}
           />
         );
       },

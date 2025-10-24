@@ -6,6 +6,10 @@
   "hpa.validation.minimumReplicas.required": "Minimum replicas cannot be empty",
   "hpa.validation.maximumReplicas.required": "Maximum replicas cannot be empty",
   "hpa.validation.metrics.required": "Please fill in at least one metric value",
+  "hpa.common.statusValue": "Status: {value}",
+  "hpa.common.reasonValue": "Reason: {value}",
+  "hpa.common.messageValue": "Message: {value}",
+  "hpa.common.noData": "No Data",
   "hpa.common.resourceStatus": "Resource Status",
   "hpa.common.cluster": "Cluster",
   "hpa.common.events": "Events",
@@ -15,6 +19,8 @@
   "hpa.common.viewEvents": "View Events",
   "hpa.common.loading": "Loading...",
   "hpa.common.loadMore": "Scroll to load more",
+  "hpa.common.loadError": "Loading failed, please retry",
+  "hpa.common.retry": "Retry",
   "hpa.common.basicInfo": "Basic Information",
   "hpa.common.unCompletedDescription": "Not Set",
   "hpa.common.completedDescription": "Set",
@@ -95,5 +101,11 @@
   "hpa.advanceSettings.stabilizationWindowSeconds": "Stabilization Window (s)",
   "hpa.advanceSettings.stabilizationWindowSeconds.help": "When scaling metrics fluctuate constantly, the stabilization window is used to limit replica count fluctuations.",
   "hpa.advanceSettings.value": "Scale Up Value",
-  "hpa.advanceSettings.stabilizationWindowSeconds.value": "Activation Time (s)"
+  "hpa.advanceSettings.stabilizationWindowSeconds.value": "Activation Time (s)",
+  "hpa.scaleTarget.status.ableToScale": "Able to Scale",
+  "hpa.scaleTarget.status.scalingActive": "Metrics Valid",
+  "hpa.scaleTarget.status.scalingLimited": "Replicas Unrestricted",
+  "hpa.scaleTarget.status.ableToScale.description": "Whether new scaling operations are allowed",
+  "hpa.scaleTarget.status.scalingActive.description": "Whether valid metrics are successfully obtained and desired replica count calculated",
+  "hpa.scaleTarget.status.scalingLimited.description": "Whether desired replica count is limited by minimum or maximum replicas."
 }

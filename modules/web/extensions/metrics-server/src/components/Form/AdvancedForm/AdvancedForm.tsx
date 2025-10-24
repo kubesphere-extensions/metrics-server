@@ -31,7 +31,10 @@ const AdvancedForm = forwardRef(({ onOk }: { onOk?: () => void }, ref) => {
   const [form] = useForm();
   return (
     <div style={{ padding: '0 20px 20px 20px' }}>
-      <Toggle>
+      <Toggle
+        label={t('hpa.advanceSettings.title')}
+        description={t('hpa.advanceSettings.description')}
+      >
         <Form
           initialValues={hpaData}
           form={form}

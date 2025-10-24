@@ -5,7 +5,6 @@ import {
   getLocalTime,
   IHpaDetail,
   joinSelector,
-  ProjectAliasName,
   tableState2Query,
   useBatchActions,
   useItemActions,
@@ -23,7 +22,7 @@ import { HpaCreateModal } from '../Modal/HpaCreateModal/HpaCreateModal';
 
 import { HpaStatus } from '../HpaStatus/HpaStatus';
 import { HpaEditModal } from '../Modal/HpaEditModal/HpaEditModal';
-import { transformBytes } from '../../utils';
+import { formatCpuMetricValue, formatMemoryMetricValue } from '../../utils';
 import { useHpaList } from '../../data/useHpaList';
 import { useDelete } from '../../hooks/useDelete';
 import { createHpaStore } from '../../stores/hpaStore';
@@ -31,6 +30,7 @@ import { WorkloadHpaDetailSheet } from '../WorkloadDetailSheet/WorkloadDetailShe
 import { get } from 'lodash';
 import { HpaYamlModal } from '../Modal/HpaYamlModal';
 import { HpaScalerSettingModal } from '../Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../Icon/HpaIcon';
 
 const Container = styled.div`
   table .table-cell {
@@ -96,8 +96,8 @@ export const HpaTable = (props: HpaTableProps) => {
       cluster,
       namespace,
       labelSelector: joinSelector({
-        'autoscaling.kubeshpere.io/scale-target-kind': kind,
-        'autoscaling.kubeshpere.io/scale-target-name': name,
+        'autoscaling.kubesphere.io/scale-target-kind': kind,
+        'autoscaling.kubesphere.io/scale-target-name': name,
       }),
       ...tableState2Query(state),
     };
@@ -293,7 +293,7 @@ export const HpaTable = (props: HpaTableProps) => {
         cell: info => {
           return (
             <Avatar
-              icon={<Stretch size={40} />}
+              icon={<HpaIcon />}
               title={
                 <a
                   onClick={() => {
@@ -345,11 +345,16 @@ export const HpaTable = (props: HpaTableProps) => {
         },
         enableHiding: true,
         cell: info => {
-          const { cpuCurrentUtilization = 0, cpuTargetUtilization = 0 } = info.row.original;
+          const {
+            cpuCurrentUtilization = 0,
+            cpuTargetUtilization = 0,
+            cpuTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-              label={`${t('hpa.common.current')}：${cpuCurrentUtilization}%`}
+              value={formatCpuMetricValue(cpuTargetUtilization, cpuTargetType)}
+              label={`${t('hpa.common.current')}：${formatCpuMetricValue(cpuCurrentUtilization, cpuTargetType)}`}
             />
           );
         },
@@ -364,15 +369,16 @@ export const HpaTable = (props: HpaTableProps) => {
         },
         enableHiding: true,
         cell: info => {
-          const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
+          const {
+            memoryCurrentValue = 0,
+            memoryTargetValue = 0,
+            memoryTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={memoryTargetValue}
-              label={
-                memoryCurrentValue
-                  ? `${t('hpa.common.current')}：${transformBytes(memoryCurrentValue)}`
-                  : '--'
-              }
+              value={formatMemoryMetricValue(memoryTargetValue, memoryTargetType)}
+              label={`${t('hpa.common.current')}：${formatMemoryMetricValue(memoryCurrentValue, memoryTargetType)}`}
             />
           );
         },

@@ -25,13 +25,15 @@ import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
 import { HpaEditModal } from '../../components/Modal/HpaEditModal/HpaEditModal';
 
-import { transformBytes } from '../../utils';
+import { formatCpuMetricValue, formatMemoryMetricValue } from '../../utils';
 import { useHpaList } from '../../data/useHpaList';
 import { useDelete } from '../../hooks/useDelete';
 import { createHpaStore } from '../../stores/hpaStore';
 import { useParams } from 'react-router-dom';
 import { get } from 'lodash';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
+import { HpaIcon } from '../../components/Icon/HpaIcon';
+import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
 
 const Container = styled.div`
   table .table-cell {
@@ -269,7 +271,7 @@ export const WorkSpaceHpaList = () => {
           return (
             <Avatar
               to={`/workspaces/${workspace}/clusters/${namespaceParams.cluster}/projects/${namespaceParams.namespace}/hpa-detail/${info.row.original.name}`}
-              icon={<Stretch size={40} />}
+              icon={<HpaIcon />}
               title={<a>{getDisplayName(info.row.original)}</a>}
               description={info.row.original.description}
             />
@@ -286,7 +288,9 @@ export const WorkSpaceHpaList = () => {
         enableHiding: true,
         cell: info => (
           <HpaStatus
-            onClick={() => openEvents({ detail: info.row.original, headerTitle: '查看事件' })}
+            onClick={() =>
+              openEvents({ detail: info.row.original, headerTitle: t('hpa.common.viewEvents') })
+            }
             status={info.row.original.status}
           />
         ),
@@ -298,7 +302,12 @@ export const WorkSpaceHpaList = () => {
         cell: info => {
           const name = get(info.row.original, '_originData.spec.scaleTargetRef.name');
           const type = get(info.row.original, '_originData.spec.scaleTargetRef.kind');
-          return <Field label={type} value={name}></Field>;
+          return (
+            <Field
+              label={t(WORKLOAD_KIND_TEXT_MAP[type as keyof typeof WORKLOAD_KIND_TEXT_MAP])}
+              value={name}
+            ></Field>
+          );
         },
       },
       {
@@ -311,11 +320,16 @@ export const WorkSpaceHpaList = () => {
         },
         enableHiding: true,
         cell: info => {
-          const { cpuCurrentUtilization = 0, cpuTargetUtilization = 0 } = info.row.original;
+          const {
+            cpuCurrentUtilization = 0,
+            cpuTargetUtilization = 0,
+            cpuTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={cpuTargetUtilization ? `${cpuTargetUtilization}%` : '--'}
-              label={`${t('hpa.common.current')}：${cpuCurrentUtilization}%`}
+              value={formatCpuMetricValue(cpuTargetUtilization, cpuTargetType)}
+              label={`${t('hpa.common.current')}：${formatCpuMetricValue(cpuCurrentUtilization, cpuTargetType)}`}
             />
           );
         },
@@ -330,15 +344,16 @@ export const WorkSpaceHpaList = () => {
         },
         enableHiding: true,
         cell: info => {
-          const { memoryCurrentValue = 0, memoryTargetValue = 0 } = info.row.original;
+          const {
+            memoryCurrentValue = 0,
+            memoryTargetValue = 0,
+            memoryTargetType,
+          } = info.row.original;
+
           return (
             <Field
-              value={memoryTargetValue}
-              label={
-                memoryCurrentValue
-                  ? `${t('hpa.common.current')}：${transformBytes(memoryCurrentValue)}`
-                  : '--'
-              }
+              value={formatMemoryMetricValue(memoryTargetValue, memoryTargetType)}
+              label={`${t('hpa.common.current')}：${formatMemoryMetricValue(memoryCurrentValue, memoryTargetType)}`}
             />
           );
         },

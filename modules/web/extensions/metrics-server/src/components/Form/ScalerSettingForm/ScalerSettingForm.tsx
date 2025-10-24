@@ -100,7 +100,7 @@ const ScalerSettingForm = forwardRef(
                   <NumberInput
                     integer={false}
                     min={0}
-                    max={Infinity}
+                    max={formMetrics.cpu.type === 'Utilization' ? 100 : Infinity}
                     onChange={(value: number) => {
                       updateFormMetrics({
                         cpu: {
@@ -153,7 +153,7 @@ const ScalerSettingForm = forwardRef(
                     <NumberInput
                       min={0}
                       integer={false}
-                      max={Infinity}
+                      max={100}
                       onChange={(value: number) => {
                         updateFormMetrics({
                           memory: {

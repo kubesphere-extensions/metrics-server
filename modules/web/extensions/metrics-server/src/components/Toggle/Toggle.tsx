@@ -30,15 +30,20 @@ const ToggleContent = styled.div<{ isOpen: boolean }>`
     visibility: hidden;
   `}
 `;
-const Toggle = ({ children }: { children: React.ReactNode }) => {
+type ToggleProps = {
+  children: React.ReactNode;
+  label: string;
+  description: string;
+};
+const Toggle = ({ children, label, description }: ToggleProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ToggleWrapper>
       <ToggleHeader onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        <span>伸缩行为</span>
+        <span>{label}</span>
       </ToggleHeader>
-      <ToggleDescription>配置目标资源在扩容和缩容两个方向的伸缩行为。</ToggleDescription>
+      <ToggleDescription>{description}</ToggleDescription>
       <ToggleContent isOpen={isOpen}>
         <>{children}</>
       </ToggleContent>

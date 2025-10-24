@@ -3,15 +3,20 @@ const WORKLOAD_KIND_MAP = {
   StatefulSet: 'statefulsets',
 };
 
+const WORKLOAD_KIND_TEXT_MAP = {
+  Deployment: 'hpa.common.deployment',
+  StatefulSet: 'hpa.common.statefulSet',
+};
+
 const STATUS_TITLE = {
-  AbleToScale: '可伸缩',
-  ScalingActive: '指标有效',
-  ScalingLimited: '副本不受限',
+  AbleToScale: 'hpa.scaleTarget.status.ableToScale',
+  ScalingActive: 'hpa.scaleTarget.status.scalingActive',
+  ScalingLimited: 'hpa.scaleTarget.status.scalingLimited',
 };
 const STATUS_DESCRIPTION = {
-  AbleToScale: '是否允许新的弹性伸缩操作',
-  ScalingActive: '是否成功获取有效指标并计算期望副本数',
-  ScalingLimited: '期望副本数是否受限于最小副本数或最大副本数。',
+  AbleToScale: 'hpa.scaleTarget.status.ableToScale.description',
+  ScalingActive: 'hpa.scaleTarget.status.scalingActive.description',
+  ScalingLimited: 'hpa.scaleTarget.status.scalingLimited.description',
 };
 
 const ICON_TYPES = {
@@ -20,4 +25,4 @@ const ICON_TYPES = {
   Unknown: { name: 'question', color: '#E0992C' },
 };
 
-export { WORKLOAD_KIND_MAP, STATUS_TITLE, STATUS_DESCRIPTION, ICON_TYPES };
+export { WORKLOAD_KIND_MAP, STATUS_TITLE, STATUS_DESCRIPTION, ICON_TYPES, WORKLOAD_KIND_TEXT_MAP };

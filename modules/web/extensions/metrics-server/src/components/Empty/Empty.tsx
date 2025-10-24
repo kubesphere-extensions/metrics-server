@@ -16,7 +16,7 @@ export const Empty: React.FC<EmptyProps> = props => {
     <EmptyWrapper>
       <EmptyIcon>{React.isValidElement(icon) ? icon : <Warning size={48} />}</EmptyIcon>
       <EmptyTitle>
-        <div>{title ?? t('NO_DATA')}</div>
+        <div>{title ?? t('hpa.common.noData')}</div>
         {desc && <div>{desc}</div>}
       </EmptyTitle>
       {actions && <EmptyAction>{actions}</EmptyAction>}

@@ -6,6 +6,10 @@
   "hpa.validation.minimumReplicas.required": "El número mínimo de réplicas no puede estar vacío",
   "hpa.validation.maximumReplicas.required": "El número máximo de réplicas no puede estar vacío",
   "hpa.validation.metrics.required": "Ingrese al menos un valor de indicador",
+  "hpa.common.statusValue": "Estado: {value}",
+  "hpa.common.reasonValue": "Razón: {value}",
+  "hpa.common.messageValue": "Mensaje: {value}",
+  "hpa.common.noData": "Sin datos",
   "hpa.common.resourceStatus": "Estado del recurso",
   "hpa.common.cluster": "Cluster",
   "hpa.common.events": "Eventos",
@@ -15,6 +19,8 @@
   "hpa.common.viewEvents": "Ver eventos",
   "hpa.common.loading": "Cargando...",
   "hpa.common.loadMore": "Cargar más",
+  "hpa.common.loadError": "Error al cargar, por favor reintente",
+  "hpa.common.retry": "Reintentar",
   "hpa.common.basicInfo": "Información básica",
   "hpa.common.unCompletedDescription": "No configurado",
   "hpa.common.completedDescription": "Configurado",
@@ -95,5 +101,11 @@
   "hpa.advanceSettings.stabilizationWindowSeconds": "Tiempo de ventana de estabilización (s)",
   "hpa.advanceSettings.stabilizationWindowSeconds.help": "Cuando el indicador utilizado para el escalado fluctúa continuamente, la ventana de estabilización se utiliza para limitar la fluctuación del número de réplicas.",
   "hpa.advanceSettings.value": "Valor de aumento",
-  "hpa.advanceSettings.stabilizationWindowSeconds.value": "Tiempo de activación (s)"
+  "hpa.advanceSettings.stabilizationWindowSeconds.value": "Tiempo de activación (s)",
+  "hpa.scaleTarget.status.ableToScale": "Escalable",
+  "hpa.scaleTarget.status.scalingActive": "Métricas válidas",
+  "hpa.scaleTarget.status.scalingLimited": "Réplicas sin restricción",
+  "hpa.scaleTarget.status.ableToScale.description": "Si se permiten nuevas operaciones de escalado elástico",
+  "hpa.scaleTarget.status.scalingActive.description": "Si se obtienen con éxito las métricas válidas y se calcula el número deseado de réplicas",
+  "hpa.scaleTarget.status.scalingLimited.description": "Si el número deseado de réplicas está limitado por el número mínimo o máximo de réplicas."
 }
