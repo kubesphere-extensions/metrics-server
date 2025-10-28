@@ -3,7 +3,6 @@ import React from 'react';
 import { HpaModal } from '../components/WorkloadSheet';
 import { hasClusterModule } from '@ks-console/shared';
 import { HpaIcon } from '../components/Icon/HpaIcon';
-import { Tooltip } from '@kubed/components';
 
 export const events = {
   // events
@@ -22,7 +21,7 @@ export const events = {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <HpaIcon size={40} />,
+        icon: <HpaIcon />,
       };
     },
     'pageNav://pageNav.workspace.workloads.statefulsets-detail.metrics-server': (
@@ -38,7 +37,7 @@ export const events = {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <HpaIcon size={40} />,
+        icon: <HpaIcon />,
       };
     },
     'pageNav://pageNav.cluster.deployments.detail.metrics-server': (point: any, context: any) => {
@@ -51,7 +50,7 @@ export const events = {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <HpaIcon size={40} />,
+        icon: <HpaIcon />,
       };
     },
     'pageNav://pageNav.cluster.statefulsets.detail.metrics-server': (point: any, context: any) => {
@@ -64,7 +63,7 @@ export const events = {
         ...point,
         disabled,
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
-        icon: <HpaIcon size={40} />,
+        icon: <HpaIcon />,
       };
     },
   },

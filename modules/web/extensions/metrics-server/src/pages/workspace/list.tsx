@@ -13,13 +13,13 @@ import {
   useWorkspaceProjectSelect,
   EventsSheet,
   IHpaDetail,
+  PageLayout,
 } from '@ks-console/shared';
 import { Card, DataTable, Field } from '@kubed/components';
-import { Pen, Trash, Stretch } from '@kubed/icons';
+import { Pen, Trash, Role } from '@kubed/icons';
 import { ColumnDef, Table } from '@tanstack/react-table';
 import React from 'react';
 import styled from 'styled-components';
-import { Empty } from '../../components/Empty/Empty';
 import { HpaCreateModal } from '../../components/Modal/HpaCreateModal/HpaCreateModal';
 import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { HpaStatus } from '../../components/HpaStatus/HpaStatus';
@@ -35,9 +35,12 @@ import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingMo
 import { HpaIcon } from '../../components/Icon/HpaIcon';
 import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
 
-const Container = styled.div`
-  table .table-cell {
-    word-break: break-word;
+const TableWrapper = styled.div`
+  .table {
+    width: 100%;
+    .table-cell {
+      word-break: break-word;
+    }
   }
 `;
 
@@ -468,6 +471,19 @@ export const WorkSpaceHpaList = () => {
             ],
           };
         },
+        empty: () => {
+          if (!namespaceParams.cluster || !namespaceParams.namespace) {
+            return {
+              image: <Role size={48} />,
+              description: t('hpa.common.selectClusterOrProject'),
+            };
+          }
+          return {
+            image: <HpaIcon size={48} />,
+            title: t('hpa.empty.title'),
+            description: t('hpa.empty.description'),
+          };
+        },
       },
     },
   });
@@ -476,28 +492,13 @@ export const WorkSpaceHpaList = () => {
     tableRef.current = table;
   }, []);
 
-  // const isEmpty =
-  //   isFetched && (!query.page || query.page == 1) && !query.name && !data?.data?.length;
-  const isEmpty = false;
-
   return (
-    <>
-      {isEmpty ? (
-        <Card padding={32}>
-          <Empty
-            icon={<Stretch size={48} />}
-            title={t('hpa.empty.title')}
-            desc={t('hpa.empty.description')}
-            actions={renderTableAction()}
-          />
-        </Card>
-      ) : (
-        <Container>
-          <Card padding={0}>
-            <DataTable.DataTable table={table} />
-          </Card>
-        </Container>
-      )}
-    </>
+    <PageLayout title={t('hpa.title')}>
+      <Card padding={0}>
+        <TableWrapper>
+          <DataTable.DataTable table={table} />
+        </TableWrapper>
+      </Card>
+    </PageLayout>
   );
 };

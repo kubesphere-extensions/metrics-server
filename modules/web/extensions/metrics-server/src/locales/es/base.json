@@ -6,6 +6,7 @@
   "hpa.validation.minimumReplicas.required": "El número mínimo de réplicas no puede estar vacío",
   "hpa.validation.maximumReplicas.required": "El número máximo de réplicas no puede estar vacío",
   "hpa.validation.metrics.required": "Ingrese al menos un valor de indicador",
+  "hpa.common.selectClusterOrProject": "Seleccione un clúster o un proyecto",
   "hpa.common.statusValue": "Estado: {value}",
   "hpa.common.reasonValue": "Razón: {value}",
   "hpa.common.messageValue": "Mensaje: {value}",
