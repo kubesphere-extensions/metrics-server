@@ -99,6 +99,7 @@ const ClusterHpaList = () => {
     modal: HpaCreateModal,
     id: 'hpa-create',
   });
+  const reset = useHpaStore(state => state.reset);
   const { open: openYaml, close: closeYaml } = useModalAction({
     modal: HpaYamlModal,
     id: 'hpa-yaml',
@@ -392,7 +393,10 @@ const ClusterHpaList = () => {
               closeCreate();
               refetch();
             },
-            onCancel: closeCreate,
+            onCancel: () => {
+              reset();
+              closeCreate();
+            },
           });
         },
         props: {

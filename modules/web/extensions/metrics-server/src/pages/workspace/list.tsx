@@ -98,6 +98,7 @@ export const WorkSpaceHpaList = () => {
     modal: HpaCreateModal,
     id: 'hpa-create',
   });
+  const reset = useHpaStore(state => state.reset);
   const { open: openYaml, close: closeYaml } = useModalAction({
     modal: HpaYamlModal,
     id: 'hpa-yaml',
@@ -253,7 +254,10 @@ export const WorkSpaceHpaList = () => {
               closeCreate();
               refetch();
             },
-            onCancel: closeCreate,
+            onCancel: () => {
+              reset();
+              closeCreate();
+            },
           });
         },
       },
