@@ -7,6 +7,7 @@ import {
   getDisplayName,
   useCacheStore as useStore,
   useModalAction,
+  EventsSheet,
 } from '@ks-console/shared';
 import { useNavigate } from 'react-router-dom';
 import { useHpaDetail } from '../../data/useHpaDetail';
@@ -55,7 +56,12 @@ const ClusterHpaDetail = () => {
     return [
       {
         label: t('hpa.common.status'),
-        value: <HpaStatus status={detail.status} />,
+        value: (
+          <HpaStatus
+            onClick={() => openEvents({ detail, headerTitle: t('hpa.common.viewEvents') })}
+            status={detail.status}
+          />
+        ),
       },
       {
         label: t('hpa.common.cluster'),
@@ -75,6 +81,10 @@ const ClusterHpaDetail = () => {
       },
     ];
   }
+  const { open: openEvents } = useModalAction({
+    modal: EventsSheet,
+    id: 'hpa-events',
+  });
   const { open, close } = useModalAction({
     modal: HpaEditModal,
     id: 'hpa-edit',
