@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, FormItem, Input, Modal, useForm, notify } from '@kubed/components';
+import { Form, FormItem, Input, Modal, useForm, notify, Textarea } from '@kubed/components';
 import { BasePathParams, IHpaDetail } from '@ks-console/shared';
 import styled from 'styled-components';
 import { merge, omit } from 'lodash';
@@ -94,7 +94,7 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
               help={t('hpa.common.description.help')}
               name={['metadata', 'annotations', 'kubesphere.io/description']}
             >
-              <Input />
+              <Textarea maxLength={256} rows={3} />
             </FormItem>
           </Form>
         </HpaFormInner>
