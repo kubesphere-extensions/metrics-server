@@ -421,7 +421,7 @@ const ClusterHpaList = () => {
     rowCount: data?.total ?? 0,
     onParamsChange: setState,
     state,
-    getRowId: React.useCallback(row => row.name, []),
+    getRowId: React.useCallback(row => row.uid, []),
     meta: {
       ...baseConfig.meta,
       refetch: refetch,

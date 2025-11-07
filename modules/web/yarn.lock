@@ -1402,27 +1402,27 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@ks-console/appstore@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/appstore/-/appstore-4.2.0-community.tgz#e8b045d1650f75297c5777c52e653cc0d54cadf5"
-  integrity sha512-rVRG0ApDz7wAUWgXtRvm6NrfnTDF4rzYleXSmladJIRpZbSq2fIUofaU2fVZyty6+iV+5X1z2pfRGOGPuyjPGQ==
+"@ks-console/appstore@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/appstore/-/appstore-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#05ccac30cacd75cc1e26576b95909fedc412b959"
+  integrity sha512-8mq0cr5E22dRCC+LGfsog9pFwD4eN5+raQJAigxSYADlx2YrQa64k0Druo6pPhXxWrtAOhvt1jfZ0cFhB1uu7w==
   dependencies:
     nanoid "^3.0.0"
 
-"@ks-console/bootstrap@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/bootstrap/-/bootstrap-4.2.0-community.tgz#627da569a84f013d50d4f2dc560e1aed784858dc"
-  integrity sha512-P4Uv/1Tc8i4bjYshQkiMtd3rJn/Y9qSh0RAcbmTaF0R8Lnx3Lq0251b9kf+iEJ/JoF9I8P+7hGjcabBBrYFl1w==
+"@ks-console/bootstrap@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/bootstrap/-/bootstrap-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#45ac5357b4b8b24ec33886240ab552737027ba8b"
+  integrity sha512-HUT8zaF9lM5pMhb3IqOuolpYd/QoHrvWqZm3sbnDUt2ZtuMLvbKFLDJDun92dBoeBxy+8SBbpfE4q+3UJBhFMQ==
   dependencies:
-    "@ks-console/locales" "^4.2.0-community"
+    "@ks-console/locales" "^0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
     mustache "^4.2.0"
     npm-checky "^1.0.4"
     path-browserify "^1.0.1"
 
-"@ks-console/console@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/console/-/console-4.2.0-community.tgz#631b2b4467b57d3184218428424040500cdb53ba"
-  integrity sha512-nlDAzCoqluBVJb5VzdgBqhJUAsv4lZywsgAKIecznXF72hvPwrWVkf3KSPFN1nMmn2pJcSAdHVzEJFfjqzd/ag==
+"@ks-console/console@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/console/-/console-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#82e988bc76f607f4407d2e7d7d6f5a98b4c7852b"
+  integrity sha512-av8rtlCG3jgh9y9ypqWhlhfg9AeDcIx3AG2ttVO0JbcJygmGjZKJzo0Ql0bG9pjD4JyOPLkpnTTrPr5bZyqAcA==
   dependencies:
     "@dnd-kit/core" "^6.1.0"
     "@dnd-kit/sortable" "^8.0.0"
@@ -1440,10 +1440,10 @@
     react-textarea-autosize "^8.3.2"
     wujie-react "^1.0.28"
 
-"@ks-console/core@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/core/-/core-4.2.0-community.tgz#e5c46ec28ac6507ffe75bf8feb8e38400f67aa41"
-  integrity sha512-klunBLpxuyHbBD0hD865FLc7JJtUwvExZfWjvvB4W9ZW9WwO0bsj21/fQNr0Cwto2M+jspAhqWNAwDC8zw4IpQ==
+"@ks-console/core@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/core/-/core-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#482d08fcfb36401099678eb18e7901df2c25fed8"
+  integrity sha512-H3sDp3n4GB/xLG8W+POlL4EZUcuBYRu00yEz06I0RTUyUlQ7Ac4utGoQyRWD3li0X5O9PWpxivS8N+RSZ3+hWg==
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@tanstack/react-table" "^8.17.3"
@@ -1466,22 +1466,27 @@
     wujie-react "^1.0.28"
     zustand "^4.5.5"
 
-"@ks-console/locales@4.2.0-community", "@ks-console/locales@^4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/locales/-/locales-4.2.0-community.tgz#05df2be810790b0e0d9d0f315985325182706f87"
-  integrity sha512-2DJ72zXfazQjxAwV3MDjytxSnLIqDaJ6cSZQ1diHzsnfVCf01jZGP+EenxVdcYu98oGZk7TCAOH/GHSHpMejHA==
+"@ks-console/locales@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/locales/-/locales-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#a508c1e3201be52be1cfea2a381bcde88a936c66"
+  integrity sha512-zBopHPLWUMgRqItI0GrHpcBAf9hHB3e9MefIQH+ngmTQpPC0tTf7JEH7ip4dgYujA2mFl9AB3857m1B9fKIEQQ==
 
-"@ks-console/server@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/server/-/server-4.2.0-community.tgz#c7d365bd41ed4158ccd3f82ce4796172ffa00d54"
-  integrity sha512-SU1ZIoVfxu6tCe7MyWFW+q8aoHH5nGt+aP4hlQkQsnrzJegcjpJrGOHsaclMST5zAQ7N/EN+rDuFgavoUy4YQQ==
+"@ks-console/locales@^0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse-release-4-2.20251106T104658-utc8.6e63f25416f8"
+  resolved "http://139.198.121.174:14873/@ks-console/locales/-/locales-0.0.0-kse-release-4-2.20251106T104658-utc8.6e63f25416f8.tgz#0423a78bba2a51114b5f609afe871a49777bd769"
+  integrity sha512-VE7kY4q64yL25GnwZTHCBaHRoj4XAf5Labd6gTI/AxCJyPcTZpeCApWt3wK4VLtaCtUrZIFKeQ+oI3ypuEXE+w==
+
+"@ks-console/server@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/server/-/server-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#a34e03051594f5790eb5ddf275e3117cebfe815c"
+  integrity sha512-2NxhjzXzAo6HBokzxIGMY5EwqD52sVXjivBm90QQFk8TRtxbh0iJKcHVhXnPA8GJTghoP7F8QXjpfVjZjqLEEA==
   dependencies:
     compression "^1.7.4"
     dayjs "^1.10.7"
     http-proxy "^1.18.1"
     js-yaml "^3.13.1"
     jwt-decode "^2.2.0"
-    koa "^2.13.1"
+    koa "^2.16.2"
     koa-bodyparser "^4.3.0"
     koa-compress "^5.1.0"
     koa-connect "^2.1.0"
@@ -1502,10 +1507,10 @@
     stream-array "^1.1.2"
     ws "^8.18.0"
 
-"@ks-console/shared@4.2.0-community":
-  version "4.2.0-community"
-  resolved "http://139.198.121.174:14873/@ks-console/shared/-/shared-4.2.0-community.tgz#a008712a6fc463165549e38041a1334752a9ac88"
-  integrity sha512-+tu9PmJgSjbUSi+3gQdkGSW1Kdv0NSk+Nb8+J3NJ9ltq1GjUc3+vBQcsL/ByjdNmGMpkOJALRimsfzpwqTDRXQ==
+"@ks-console/shared@0.0.0-kse.20251106T181449-utc8.65b0ab4034ab":
+  version "0.0.0-kse.20251106T181449-utc8.65b0ab4034ab"
+  resolved "http://139.198.121.174:14873/@ks-console/shared/-/shared-0.0.0-kse.20251106T181449-utc8.65b0ab4034ab.tgz#704bd07038d75a557ed4ba613b1e78b718bc3f9e"
+  integrity sha512-adRrAwzIcFdLq0IczaCt48/CrIaMAfet4ZtG6EwMZPTQscLSERDl4Vuv1IPRWuXVirBVgGB47C2UzLiw9m0pbA==
   dependencies:
     "@tanstack/react-table" "^8.17.3"
     "@types/crypto-js" "^4.2.2"
@@ -7813,10 +7818,10 @@ koa-static@^5.0.0:
     debug "^3.1.0"
     koa-send "^5.0.0"
 
-koa@^2.13.1:
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/koa/-/koa-2.16.2.tgz#1292a3b415a9b9f3dd6872c1835229630a4ecae3"
-  integrity sha512-+CCssgnrWKx9aI3OeZwroa/ckG4JICxvIFnSiOUyl2Uv+UTI+xIw0FfFrWS7cQFpoePpr9o8csss7KzsTzNL8Q==
+koa@^2.16.2:
+  version "2.16.3"
+  resolved "https://registry.yarnpkg.com/koa/-/koa-2.16.3.tgz#dd3a250472862cf7a3ef6e25bf325cc9db620ab5"
+  integrity sha512-zPPuIt+ku1iCpFBRwseMcPYQ1cJL8l60rSmKeOuGfOXyE6YnTBmf2aEFNL2HQGrD0cPcLO/t+v9RTgC+fwEh/g==
   dependencies:
     accepts "^1.3.5"
     cache-content-type "^1.0.0"
