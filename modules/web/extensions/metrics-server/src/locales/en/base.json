@@ -6,6 +6,7 @@
   "hpa.validation.minimumReplicas.required": "Minimum replicas cannot be empty",
   "hpa.validation.maximumReplicas.required": "Maximum replicas cannot be empty",
   "hpa.validation.metrics.required": "Please fill in at least one metric value",
+  "hpa.common.selectClusterOrProject": "Select a cluster or project",
   "hpa.common.statusValue": "Status: {value}",
   "hpa.common.reasonValue": "Reason: {value}",
   "hpa.common.messageValue": "Message: {value}",

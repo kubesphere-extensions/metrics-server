@@ -6,6 +6,7 @@
   "hpa.validation.minimumReplicas.required": "最小副本数不能为空",
   "hpa.validation.maximumReplicas.required": "最大副本数不能为空",
   "hpa.validation.metrics.required": "请至少填写一个指标值",
+  "hpa.common.selectClusterOrProject":"请选择集群或项目",
   "hpa.common.statusValue": "状态：{value}",
   "hpa.common.reasonValue": "原因：{value}",
   "hpa.common.messageValue": "消息：{value}",

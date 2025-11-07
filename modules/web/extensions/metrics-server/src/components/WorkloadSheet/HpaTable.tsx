@@ -13,7 +13,7 @@ import {
   EventsSheet,
 } from '@ks-console/shared';
 import { Card, DataTable, Field } from '@kubed/components';
-import { Pen, Trash, Stretch } from '@kubed/icons';
+import { Pen, Trash } from '@kubed/icons';
 import { ColumnDef, Table } from '@tanstack/react-table';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -503,7 +503,7 @@ export const HpaTable = (props: HpaTableProps) => {
       {isEmpty ? (
         <Card padding={32}>
           <Empty
-            icon={<Stretch size={48} />}
+            icon={<HpaIcon size={48} />}
             title={t('hpa.empty.title')}
             desc={t('hpa.empty.description')}
             actions={renderTableAction()}

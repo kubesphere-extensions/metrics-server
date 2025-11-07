@@ -35,6 +35,9 @@ import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
 const TableWrapper = styled.div`
   .table {
     width: 100%;
+    .table-cell {
+      word-break: break-word;
+    }
   }
 `;
 
@@ -436,6 +439,13 @@ const ClusterHpaList = () => {
           simpleMode: false,
           suggestions: [],
         }),
+        empty: () => {
+          return {
+            image: <HpaIcon size={48} />,
+            title: t('hpa.empty.title'),
+            description: t('hpa.empty.description'),
+          };
+        },
       },
     },
   });
