@@ -69,79 +69,84 @@ type HpaStore = {
   updateSelectWorkload: (newData: any) => void;
   hpaData: HpaData;
   updateHpaData: (newData: PartialDeep<HpaData>) => void;
+  reset: () => void;
 };
 
 type UseHpaStore = UseBoundStore<StoreApi<HpaStore>>;
 
-const createHpaStore = (workloadDetail: any = {}) =>
-  create<HpaStore>()(
+const createHpaStore = (workloadDetail: any = {}) => {
+  const initialState = {
+    selectWorkload: workloadDetail,
+    formMetrics: {
+      cpu: {
+        name: 'cpu' as const,
+        type: 'Utilization' as const, // CPU Default to percentage
+        value: '',
+      },
+      memory: {
+        name: 'memory' as const,
+        type: 'AverageValue' as const, // Memory Default to absolute value
+        value: '',
+      },
+    } as FormMetrics,
+    hpaData: {
+      apiVersion: '',
+      kind: 'HorizontalPodAutoscaler',
+      metadata: {
+        name: get(workloadDetail, 'name', ''),
+        namespace: get(workloadDetail, 'namespace', ''),
+        annotations: {
+          cpuTargetUtilization: '',
+          memoryTargetValue: '',
+          'kubesphere.io/alias-name': '',
+          'kubesphere.io/description': '',
+        },
+        ownerReferences: [
+          {
+            apiVersion: 'apps/v1',
+            blockOwnerDeletion: true,
+            controller: true,
+            kind: get(workloadDetail, 'kind', ''),
+            name: get(workloadDetail, 'name', ''),
+            uid: get(workloadDetail, 'uid', ''),
+          },
+        ],
+      },
+      spec: {
+        metrics: [],
+        minReplicas: 1,
+        maxReplicas: 1,
+        scaleTargetRef: {
+          apiVersion: 'apps/v1',
+          kind: get(workloadDetail, 'kind', ''),
+          name: get(workloadDetail, 'name', ''),
+        },
+        behavior: {
+          scaleDown: {
+            selectPolicy: 'Max',
+            stabilizationWindowSeconds: 0,
+          },
+          scaleUp: {
+            selectPolicy: 'Max',
+            stabilizationWindowSeconds: 0,
+          },
+        },
+      },
+    } as HpaData,
+  };
+
+  return create<HpaStore>()(
     immer(set => ({
-      selectWorkload: workloadDetail,
+      ...initialState,
       updateSelectWorkload: newData =>
         set(draft => {
           draft.selectWorkload = newData;
         }),
-      formMetrics: {
-        cpu: {
-          name: 'cpu',
-          type: 'Utilization', // CPU Default to percentage
-          value: '',
-        },
-        memory: {
-          name: 'memory',
-          type: 'AverageValue', // Memory Default to absolute value
-          value: '',
-        },
-      },
       updateFormMetrics: newData =>
         set(draft => {
           const mergedData = merge({}, draft.formMetrics, newData);
           draft.formMetrics = mergedData;
         }),
-      hpaData: {
-        apiVersion: '',
-        kind: 'HorizontalPodAutoscaler',
-        metadata: {
-          name: get(workloadDetail, 'name', ''),
-          namespace: get(workloadDetail, 'namespace', ''),
-          annotations: {
-            cpuTargetUtilization: '',
-            memoryTargetValue: '',
-            'kubesphere.io/alias-name': '',
-            'kubesphere.io/description': '',
-          },
-          ownerReferences: [
-            {
-              apiVersion: 'apps/v1',
-              blockOwnerDeletion: true,
-              controller: true,
-              kind: get(workloadDetail, 'kind', ''),
-              name: get(workloadDetail, 'name', ''),
-              uid: get(workloadDetail, 'uid', ''),
-            },
-          ],
-        },
-        spec: {
-          metrics: [],
-          minReplicas: 1,
-          maxReplicas: 1,
-          scaleTargetRef: {
-            apiVersion: 'apps/v1',
-            kind: get(workloadDetail, 'kind', ''),
-            name: get(workloadDetail, 'name', ''),
-          },
-          behavior: {
-            scaleDown: {
-              selectPolicy: 'Max',
-              stabilizationWindowSeconds: 0,
-            },
-            scaleUp: {
-              selectPolicy: 'Max',
-              stabilizationWindowSeconds: 0,
-            },
-          },
-        },
-      },
       updateHpaData: newData =>
         set(draft => {
           const mergedData = merge({}, draft.hpaData, newData);
@@ -153,8 +158,69 @@ const createHpaStore = (workloadDetail: any = {}) =>
           }
           draft.hpaData = mergedData;
         }),
+      reset: () =>
+        set(draft => {
+          draft.selectWorkload = initialState.selectWorkload;
+          draft.formMetrics = {
+            cpu: {
+              name: 'cpu' as const,
+              type: 'Utilization' as const,
+              value: '',
+            },
+            memory: {
+              name: 'memory' as const,
+              type: 'AverageValue' as const,
+              value: '',
+            },
+          };
+          draft.hpaData = {
+            apiVersion: '',
+            kind: 'HorizontalPodAutoscaler',
+            metadata: {
+              name: get(workloadDetail, 'name', ''),
+              namespace: get(workloadDetail, 'namespace', ''),
+              annotations: {
+                cpuTargetUtilization: '',
+                memoryTargetValue: '',
+                'kubesphere.io/alias-name': '',
+                'kubesphere.io/description': '',
+              },
+              ownerReferences: [
+                {
+                  apiVersion: 'apps/v1',
+                  blockOwnerDeletion: true,
+                  controller: true,
+                  kind: get(workloadDetail, 'kind', ''),
+                  name: get(workloadDetail, 'name', ''),
+                  uid: get(workloadDetail, 'uid', ''),
+                },
+              ],
+            },
+            spec: {
+              metrics: [],
+              minReplicas: 1,
+              maxReplicas: 1,
+              scaleTargetRef: {
+                apiVersion: 'apps/v1',
+                kind: get(workloadDetail, 'kind', ''),
+                name: get(workloadDetail, 'name', ''),
+              },
+              behavior: {
+                scaleDown: {
+                  selectPolicy: 'Max',
+                  stabilizationWindowSeconds: 0,
+                },
+                scaleUp: {
+                  selectPolicy: 'Max',
+                  stabilizationWindowSeconds: 0,
+                },
+              },
+            },
+          };
+        }),
     })),
   );
+};
 
 export { createHpaStore };
 export type { UseHpaStore, HpaData, HpaStore };
