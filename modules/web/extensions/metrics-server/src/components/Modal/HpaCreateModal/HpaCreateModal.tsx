@@ -13,6 +13,7 @@ import { quantityToMi } from '../../../utils';
 import { AdvancedForm } from '../../Form/AdvancedForm/AdvancedForm';
 import { useHpaCreateMutation } from '../../../data/useHpaCreateMutation';
 import { convertMetrics, convertToFormMetrics, validateFormMetrics } from '../helper';
+import { cloneDeep } from 'lodash';
 type HpaCreateModalProps = {
   onOk: () => void;
   onCancel: () => void;
@@ -68,7 +69,14 @@ const HpaCreateModal = ({
       <Button
         loading={false}
         onClick={() => {
-          createHpa(hpaData);
+          const finalData = cloneDeep(hpaData);
+          if (!finalData?.spec?.behavior?.scaleUp?.policies?.length) {
+            delete finalData.spec.behavior.scaleUp.policies;
+          }
+          if (!finalData?.spec?.behavior?.scaleDown?.policies?.length) {
+            delete finalData.spec.behavior.scaleDown.policies;
+          }
+          createHpa(finalData);
         }}
         radius="xl"
         shadow
@@ -120,7 +128,14 @@ const HpaCreateModal = ({
             loading={false}
             onClick={() => {
               advancedFormFromRef?.current?.form.submit();
-              createHpa(hpaData);
+              const finalData = cloneDeep(hpaData);
+              if (!finalData?.spec?.behavior?.scaleUp?.policies?.length) {
+                delete finalData.spec.behavior.scaleUp.policies;
+              }
+              if (!finalData?.spec?.behavior?.scaleDown?.policies?.length) {
+                delete finalData.spec.behavior.scaleDown.policies;
+              }
+              createHpa(finalData);
             }}
             radius="xl"
             shadow

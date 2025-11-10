@@ -85,12 +85,6 @@ const ClusterHpaList = () => {
     },
   });
 
-  const callback = (callBackType: string) => {
-    refetch();
-    if (callBackType === 'delete') {
-      tableRef.current?.resetRowSelection(true);
-    }
-  };
   const { open, close } = useModalAction({
     modal: HpaEditModal,
     id: 'hpa-edit',

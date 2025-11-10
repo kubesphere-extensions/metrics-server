@@ -45,7 +45,7 @@ type HpaData = {
         stabilizationWindowSeconds?: number;
         policies?: {
           type: string;
-          value: string;
+          value: number;
           periodSeconds: number;
         }[];
       };
@@ -54,7 +54,7 @@ type HpaData = {
         stabilizationWindowSeconds?: number;
         policies?: {
           type: string;
-          value: string;
+          value: number;
           periodSeconds: number;
         }[];
       };
@@ -124,11 +124,30 @@ const createHpaStore = (workloadDetail: any = {}) => {
         behavior: {
           scaleDown: {
             selectPolicy: 'Max',
-            stabilizationWindowSeconds: 0,
+            stabilizationWindowSeconds: 300,
+            policies: [
+              {
+                type: 'Percent',
+                value: 100,
+                periodSeconds: 15,
+              },
+            ],
           },
           scaleUp: {
             selectPolicy: 'Max',
             stabilizationWindowSeconds: 0,
+            policies: [
+              {
+                type: 'Percent',
+                value: 100,
+                periodSeconds: 15,
+              },
+              {
+                type: 'Pods',
+                value: 4,
+                periodSeconds: 15,
+              },
+            ],
           },
         },
       },
@@ -151,10 +170,17 @@ const createHpaStore = (workloadDetail: any = {}) => {
         set(draft => {
           const mergedData = merge({}, draft.hpaData, newData);
           if (newData.metadata?.ownerReferences) {
-            mergedData.metadata.ownerReferences = newData.metadata.ownerReferences as any;
+            mergedData.metadata.ownerReferences = newData.metadata.ownerReferences;
           }
           if (newData.spec?.metrics) {
-            mergedData.spec.metrics = newData.spec.metrics as any;
+            mergedData.spec.metrics = newData.spec.metrics;
+          }
+          // Handle policies arrays to ensure they are replaced, not merged
+          if (newData.spec?.behavior?.scaleUp?.policies) {
+            mergedData.spec.behavior.scaleUp.policies = newData.spec.behavior.scaleUp.policies;
+          }
+          if (newData.spec?.behavior?.scaleDown?.policies) {
+            mergedData.spec.behavior.scaleDown.policies = newData.spec.behavior.scaleDown.policies;
           }
           draft.hpaData = mergedData;
         }),
@@ -208,11 +234,30 @@ const createHpaStore = (workloadDetail: any = {}) => {
               behavior: {
                 scaleDown: {
                   selectPolicy: 'Max',
-                  stabilizationWindowSeconds: 0,
+                  stabilizationWindowSeconds: 300,
+                  policies: [
+                    {
+                      type: 'Percent',
+                      value: 100,
+                      periodSeconds: 15,
+                    },
+                  ],
                 },
                 scaleUp: {
                   selectPolicy: 'Max',
                   stabilizationWindowSeconds: 0,
+                  policies: [
+                    {
+                      type: 'Percent',
+                      value: 100,
+                      periodSeconds: 15,
+                    },
+                    {
+                      type: 'Pods',
+                      value: 4,
+                      periodSeconds: 15,
+                    },
+                  ],
                 },
               },
             },

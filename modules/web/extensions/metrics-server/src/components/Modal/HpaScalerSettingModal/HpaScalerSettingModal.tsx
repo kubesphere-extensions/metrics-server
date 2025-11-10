@@ -303,7 +303,7 @@ const HpaScalerSettingModal = ({ params, onOk, onCancel, open, hpaDetail }: HpaF
                               ]);
                               return (
                                 <PrefixInput
-                                  label={t('hpa.advanceSettings.value')}
+                                  label={t('hpa.advanceSettings.scaleUpValue')}
                                   unit={policyType === 'Percent' ? '%' : ''}
                                 >
                                   <NumberInput
@@ -391,7 +391,7 @@ const HpaScalerSettingModal = ({ params, onOk, onCancel, open, hpaDetail }: HpaF
                               ]);
                               return (
                                 <PrefixInput
-                                  label={t('hpa.advanceSettings.value')}
+                                  label={t('hpa.advanceSettings.scaleDownValue')}
                                   unit={policyType === 'Percent' ? '%' : ''}
                                 >
                                   <NumberInput
