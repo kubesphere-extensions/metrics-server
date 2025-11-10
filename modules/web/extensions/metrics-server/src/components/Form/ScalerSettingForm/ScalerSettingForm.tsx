@@ -133,39 +133,25 @@ const ScalerSettingForm = forwardRef(
                     options={options}
                   />
                 </PrefixInput>
-                {formMetrics.memory.type === 'AverageValue' ? (
-                  <PrefixInput label={t('hpa.metrics.targetValue')}>
-                    <Input
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        updateFormMetrics({
-                          memory: {
-                            value: e.target.value,
-                          },
-                        });
-                      }}
-                      suffix={'Mi'}
-                      style={{ width: '100%' }}
-                      defaultValue={formMetrics.memory.value}
-                    />
-                  </PrefixInput>
-                ) : (
-                  <PrefixInput label={t('hpa.metrics.targetValue')} unit="%">
-                    <NumberInput
-                      min={0}
-                      integer={false}
-                      max={100}
-                      onChange={(value: number) => {
-                        updateFormMetrics({
-                          memory: {
-                            value,
-                          },
-                        });
-                      }}
-                      style={{ width: '100%' }}
-                      defaultValue={formMetrics.memory.value}
-                    />
-                  </PrefixInput>
-                )}
+                <PrefixInput
+                  label={t('hpa.metrics.targetValue')}
+                  unit={formMetrics.memory.type === 'Utilization' ? '%' : 'Mi'}
+                >
+                  <NumberInput
+                    integer={false}
+                    min={0}
+                    max={formMetrics.memory.type === 'Utilization' ? 100 : Infinity}
+                    onChange={(value: number) => {
+                      updateFormMetrics({
+                        memory: {
+                          value,
+                        },
+                      });
+                    }}
+                    style={{ width: '100%' }}
+                    defaultValue={formMetrics.memory.value}
+                  ></NumberInput>
+                </PrefixInput>
               </FieldItem>
             </FieldContent>
             {hasMetricError ? (
