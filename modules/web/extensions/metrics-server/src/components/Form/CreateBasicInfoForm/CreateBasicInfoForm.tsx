@@ -101,7 +101,7 @@ const BaseForm = ({ onOk, onWorkloadAdd }: BaseInfoFormProps, ref: any) => {
                 name={['metadata', 'namespace']}
                 label={t('hpa.common.project')}
                 help={t('hpa.common.project.help')}
-                rules={[{ required: true }]}
+                rules={[{ required: true, message: t('hpa.validation.namespace.required') }]}
               >
                 <NamespaceSelector cluster={cluster}></NamespaceSelector>
               </FormItem>

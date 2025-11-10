@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Modal, Steps, TabStep, Button, Switch } from '@kubed/components';
-import { Appcenter } from '@kubed/icons';
+import { Cdn, Stretch, Slider } from '@kubed/icons';
 import { CreateBasicInfoForm } from '../../Form/CreateBasicInfoForm/CreateBasicInfoForm';
 import { ScalerSettingForm } from '../../Form/ScalerSettingForm/ScalerSettingForm';
 import { Header } from './styles';
@@ -228,7 +228,7 @@ const HpaCreateModal = ({
               description={t('hpa.common.unCompletedDescription')}
               completedDescription={t('hpa.common.completedDescription')}
               progressDescription={t('hpa.common.progressDescription')}
-              icon={<Appcenter size={24} />}
+              icon={<Cdn size={24} />}
             >
               {!isShowWorkloadForm ? (
                 <CreateBasicInfoForm
@@ -257,7 +257,7 @@ const HpaCreateModal = ({
               description={t('hpa.common.unCompletedDescription')}
               completedDescription={t('hpa.common.completedDescription')}
               progressDescription={t('hpa.common.progressDescription')}
-              icon={<Appcenter size={24} />}
+              icon={<Stretch size={24} />}
             >
               <ScalerSettingForm
                 ref={scalerSettingFromRef}
@@ -272,7 +272,7 @@ const HpaCreateModal = ({
               description={t('hpa.common.unCompletedDescription')}
               completedDescription={t('hpa.common.completedDescription')}
               progressDescription={t('hpa.common.progressDescription')}
-              icon={<Appcenter size={24} />}
+              icon={<Slider size={24} />}
             >
               <AdvancedForm onOk={() => {}} ref={advancedFormFromRef} />
             </TabStep>
