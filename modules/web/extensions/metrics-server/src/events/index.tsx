@@ -101,16 +101,16 @@ export const events = {
         module: 'deployments',
       });
     },
-  },
-  'pageNav://pageNav.cluster.statefulsets.detail.metrics-server': (
-    modalDispatch: any,
-    context: any,
-  ) => {
-    modalDispatch.show('open.cluster.hpa', {
-      modal: HpaModal,
-      detail: context.detail,
-      params: pick(context.detail, ['name', 'cluster', 'namespace', 'workspace']),
-      module: 'statefulsets',
-    });
+    'pageNav://pageNav.cluster.statefulsets.detail.metrics-server': (
+      modalDispatch: any,
+      context: any,
+    ) => {
+      modalDispatch.show('open.cluster.hpa', {
+        modal: HpaModal,
+        detail: context.detail,
+        params: pick(context.detail, ['name', 'cluster', 'namespace', 'workspace']),
+        module: 'statefulsets',
+      });
+    },
   },
 };
