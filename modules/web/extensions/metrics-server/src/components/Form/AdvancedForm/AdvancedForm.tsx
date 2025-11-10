@@ -102,7 +102,7 @@ const AdvancedForm = forwardRef(({ onOk }: { onOk?: () => void }, ref) => {
                             ]);
                             return (
                               <PrefixInput
-                                label={t('hpa.advanceSettings.value')}
+                                label={t('hpa.advanceSettings.scaleUpValue')}
                                 unit={policyType === 'Percent' ? '%' : ''}
                               >
                                 <NumberInput {...control} min={0} max={Infinity} integer={false} />
@@ -186,7 +186,7 @@ const AdvancedForm = forwardRef(({ onOk }: { onOk?: () => void }, ref) => {
                             ]);
                             return (
                               <PrefixInput
-                                label={t('hpa.advanceSettings.value')}
+                                label={t('hpa.advanceSettings.scaleDownValue')}
                                 unit={policyType === 'Percent' ? '%' : ''}
                               >
                                 <NumberInput {...control} min={0} max={Infinity} integer={false} />
