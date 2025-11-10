@@ -1,6 +1,7 @@
 {
   "hpa.menu.parent.title": "弹性伸缩",
   "hpa.validation.name.required": "请输入名称",
+  "hpa.validation.namespace.required": "请选择项目",
   "hpa.validation.name.pattern": "名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 63 个字符。",
   "hpa.validation.scaleTarget.required": "伸缩对象不能为空",
   "hpa.validation.minimumReplicas.required": "最小副本数不能为空",

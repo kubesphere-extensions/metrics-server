@@ -68,9 +68,9 @@ const WorkloadForm = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const intersection = useIntersection(loadMoreRef, {
-    root: null,
+    root: scrollContainerRef.current,
     rootMargin: '20px',
-    threshold: 1.0,
+    threshold: 0.1,
   });
 
   React.useEffect(() => {
@@ -142,48 +142,43 @@ const WorkloadForm = ({
               }}
             >
               <Warning2Duotone size={40} color="#bd3633" />
-              <div style={{ marginTop: '8px' }}>
-                {t('hpa.common.loadError')}
-              </div>
-              <Button
-                variant="text"
-                onClick={() => refetch()}
-                style={{ marginTop: '8px' }}
-              >
+              <div style={{ marginTop: '8px' }}>{t('hpa.common.loadError')}</div>
+              <Button variant="text" onClick={() => refetch()} style={{ marginTop: '8px' }}>
                 {t('hpa.common.retry')}
               </Button>
             </div>
           )}
-          {!error && data?.list.map(item => {
-            const hasHpa =
-              get(item, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
-            const hasCustomScaling =
-              get(item, 'labels["keda.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
-            const haVpa =
-              get(item, 'labels["vpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
-            return (
-              <RadioItem
-                disabled={hasHpa || hasCustomScaling || haVpa}
-                checked={getKey(selectedItem) === getKey(item)}
-                key={item.name}
-                onClick={() => {
-                  if (hasHpa || hasCustomScaling || haVpa) {
-                    return;
-                  }
-                  setSelectedItem(item);
-                }}
-              >
-                <RadioBox></RadioBox>
-                <Backup size={40} />
-                <RadioItemContent>
-                  <RadioItemContentName>{item.name}</RadioItemContentName>
-                  <WorkloadStatus workloadItem={item} module={value} />
-                  <span>{item.updateTime}</span>
-                  <span>{t('hpa.common.status')}</span>
-                </RadioItemContent>
-              </RadioItem>
-            );
-          })}
+          {!error &&
+            data?.list.map(item => {
+              const hasHpa =
+                get(item, 'labels["hpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
+              const hasCustomScaling =
+                get(item, 'labels["keda.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
+              const haVpa =
+                get(item, 'labels["vpa.autoscaling.kubesphere.io/managed"]', 'false') === 'true';
+              return (
+                <RadioItem
+                  disabled={hasHpa || hasCustomScaling || haVpa}
+                  checked={getKey(selectedItem) === getKey(item)}
+                  key={item.name}
+                  onClick={() => {
+                    if (hasHpa || hasCustomScaling || haVpa) {
+                      return;
+                    }
+                    setSelectedItem(item);
+                  }}
+                >
+                  <RadioBox></RadioBox>
+                  <Backup size={40} />
+                  <RadioItemContent>
+                    <RadioItemContentName>{item.name}</RadioItemContentName>
+                    <WorkloadStatus workloadItem={item} module={value} />
+                    <span>{item.updateTime}</span>
+                    <span>{t('hpa.common.status')}</span>
+                  </RadioItemContent>
+                </RadioItem>
+              );
+            })}
 
           {!error && hasNextPage && data?.list && data.list.length > 0 && (
             <LoadMore ref={loadMoreRef}>

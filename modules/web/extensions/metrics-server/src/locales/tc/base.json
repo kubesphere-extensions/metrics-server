@@ -1,6 +1,7 @@
 {
   "hpa.menu.parent.title": "彈性伸縮",
   "hpa.validation.name.required": "請輸入名稱",
+  "hpa.validation.namespace.required": "請選擇項目",
   "hpa.validation.name.pattern": "名稱只能包含小寫字母、數字和連字符（-），必須以小寫字母或數字開頭和結尾，最長 63 個字符。",
   "hpa.validation.scaleTarget.required": "伸縮對象不能爲空",
   "hpa.validation.minimumReplicas.required": "最小副本數不能爲空",
