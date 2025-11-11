@@ -33,7 +33,7 @@ import { useParams } from 'react-router-dom';
 import { get } from 'lodash';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
-import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
+import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY } from '../../constant';
 
 const TableWrapper = styled.div`
   .table {
@@ -117,7 +117,7 @@ export const WorkSpaceHpaList = () => {
   const { deleteHpa } = useDelete();
 
   const renderBatchActions = useBatchActions({
-    authKey: '',
+    authKey: AUTH_KEY,
     params: {
       cluster: namespaceParams?.cluster,
       namespace: namespaceParams?.namespace,
@@ -146,7 +146,7 @@ export const WorkSpaceHpaList = () => {
   });
 
   const renderItemActions = useItemActions({
-    authKey: '',
+    authKey: AUTH_KEY,
     params: {
       cluster: namespaceParams?.cluster,
       namespace: namespaceParams?.namespace,
@@ -223,7 +223,7 @@ export const WorkSpaceHpaList = () => {
   });
 
   const renderTableAction = useTableActions({
-    authKey: '',
+    authKey: AUTH_KEY,
     params: {
       cluster: namespaceParams?.cluster,
       namespace: namespaceParams?.namespace,

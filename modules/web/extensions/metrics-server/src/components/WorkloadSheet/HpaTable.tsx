@@ -31,6 +31,7 @@ import { get } from 'lodash';
 import { HpaYamlModal } from '../Modal/HpaYamlModal';
 import { HpaScalerSettingModal } from '../Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../Icon/HpaIcon';
+import { AUTH_KEY } from '../../constant';
 
 const Container = styled.div`
   table .table-cell {
@@ -134,7 +135,7 @@ export const HpaTable = (props: HpaTableProps) => {
   const { deleteHpa } = useDelete();
 
   const renderBatchActions = useBatchActions({
-    authKey: module,
+    authKey: AUTH_KEY,
     params: {
       cluster,
       namespace,
@@ -163,7 +164,7 @@ export const HpaTable = (props: HpaTableProps) => {
   });
 
   const renderItemActions = useItemActions({
-    authKey: module,
+    authKey: AUTH_KEY,
     params: {
       cluster,
       namespace,
@@ -240,7 +241,7 @@ export const HpaTable = (props: HpaTableProps) => {
   });
 
   const renderTableAction = useTableActions({
-    authKey: module,
+    authKey: AUTH_KEY,
     params: {
       cluster,
       namespace,

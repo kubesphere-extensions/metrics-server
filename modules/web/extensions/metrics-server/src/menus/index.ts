@@ -48,6 +48,7 @@ export const menus = [
     icon: 'stretch',
     order: 2,
     skipIfExist: true,
+    skipWorkspaceAuth: true,
   },
   {
     parent: 'workspace.elastic_scaling',

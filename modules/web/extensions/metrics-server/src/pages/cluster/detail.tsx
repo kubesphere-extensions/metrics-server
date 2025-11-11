@@ -21,6 +21,7 @@ import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
+import { AUTH_KEY } from '../../constant';
 const ClusterHpaDetail = () => {
   const navigate = useNavigate();
   const { cluster, namespace, name } = useParams();
@@ -169,7 +170,7 @@ const ClusterHpaDetail = () => {
   return (
     <>
       <DetailPage
-        authKey="metrics-server"
+        authKey={AUTH_KEY}
         tabs={tabs}
         cardProps={{
           name: getDisplayName(detail),

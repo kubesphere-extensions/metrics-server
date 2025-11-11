@@ -25,4 +25,13 @@ const ICON_TYPES = {
   Unknown: { name: 'question', color: '#E0992C' },
 };
 
-export { WORKLOAD_KIND_MAP, STATUS_TITLE, STATUS_DESCRIPTION, ICON_TYPES, WORKLOAD_KIND_TEXT_MAP };
+const AUTH_KEY = 'autoscaling';
+
+export {
+  WORKLOAD_KIND_MAP,
+  STATUS_TITLE,
+  STATUS_DESCRIPTION,
+  ICON_TYPES,
+  WORKLOAD_KIND_TEXT_MAP,
+  AUTH_KEY,
+};

@@ -21,6 +21,7 @@ import { useDelete } from '../../hooks/useDelete';
 import { useNavigate } from 'react-router-dom';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
+import { AUTH_KEY } from '../../constant';
 const WorkspaceHpaDetail = () => {
   const { cluster, namespace, workspace, name } = useParams();
   const [detail, setDetail] = useStore<any>('hpaDetail');
@@ -170,7 +171,7 @@ const WorkspaceHpaDetail = () => {
     <>
       <DetailPage
         tabs={tabs}
-        authKey="metrics-server"
+        authKey={AUTH_KEY}
         cardProps={{
           name: getDisplayName(detail),
           desc: detail?.description,
