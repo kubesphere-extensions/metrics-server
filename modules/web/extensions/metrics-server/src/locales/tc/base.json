@@ -1,4 +1,5 @@
 {
+  "hpa.disabled.tooltip": "每個工作負載只支援綁定同一種彈性伸縮策略。",
   "hpa.menu.parent.title": "彈性伸縮",
   "hpa.validation.name.required": "請輸入名稱",
   "hpa.validation.namespace.required": "請選擇項目",

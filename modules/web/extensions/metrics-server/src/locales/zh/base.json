@@ -1,4 +1,5 @@
 {
+  "hpa.disabled.tooltip": "每个工作负载仅支持绑定同一种弹性伸缩策略。",
   "hpa.menu.parent.title": "弹性伸缩",
   "hpa.validation.name.required": "请输入名称",
   "hpa.validation.namespace.required": "请选择项目",

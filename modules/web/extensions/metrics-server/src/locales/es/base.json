@@ -1,4 +1,5 @@
 {
+  "hpa.disabled.tooltip": "Cada carga de trabajo solo admite vincular una misma estrategia de escalado elástico.",
   "hpa.menu.parent.title": "Escalado elástico",
   "hpa.validation.name.required": "Ingrese el nombre",
   "hpa.validation.namespace.required": "Seleccione el proyecto",
