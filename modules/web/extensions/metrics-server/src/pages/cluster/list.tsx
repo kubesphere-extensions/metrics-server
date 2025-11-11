@@ -31,7 +31,7 @@ import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
-import { WORKLOAD_KIND_TEXT_MAP } from '../../constant';
+import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY } from '../../constant';
 const TableWrapper = styled.div`
   .table {
     width: 100%;
@@ -63,7 +63,6 @@ const useSteps = (steps: number[]) => {
 const ClusterHpaList = () => {
   const useHpaStore = createHpaStore();
   const { cluster } = useParams();
-  const authKey = 'deployments';
   const tableRef = React.useRef<Table<RecordType>>();
   const { state, setState } = useUrlSearchParamsStatus([]);
   const { render: renderProjectSelect, params } = useProjectSelect();
@@ -110,7 +109,7 @@ const ClusterHpaList = () => {
   const { deleteHpa } = useDelete();
 
   const renderItemActions = useItemActions({
-    authKey: authKey,
+    authKey: AUTH_KEY,
     params: {
       cluster,
     },
@@ -338,7 +337,7 @@ const ClusterHpaList = () => {
   ];
 
   const renderBatchActions = useBatchActions({
-    authKey,
+    authKey: AUTH_KEY,
     params: {
       cluster,
     },
@@ -366,7 +365,7 @@ const ClusterHpaList = () => {
   });
 
   const renderTableActions = useTableActions({
-    authKey: authKey,
+    authKey: AUTH_KEY,
     params: {
       cluster,
     },

@@ -21,8 +21,7 @@ import { HpaEditModal } from '../Modal/HpaEditModal/HpaEditModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../Icon/HpaIcon';
-
-const authKey = 'metrics-server';
+import { AUTH_KEY } from '../../constant';
 
 interface WorkloadHpaDetailProps {
   params?: BasePathParams;
@@ -113,6 +112,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
     const actions: any[] = [
       {
         key: 'edit',
+        action: 'edit',
         icon: <Pen />,
         text: t('hpa.common.editBaseInfo'),
         onClick: (_: any) => {
@@ -129,6 +129,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
       },
       {
         key: 'editYaml',
+        action: 'edit',
         icon: <Pen />,
         text: t('hpa.common.editYaml'),
         onClick: (_: any) => {
@@ -145,6 +146,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
       },
       {
         key: 'editScale',
+        action: 'edit',
         icon: <Pen />,
         text: t('hpa.common.editScalerSettings'),
         onClick: (_: any) => {
@@ -161,6 +163,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
       },
       {
         key: 'delete',
+        action: 'delete',
         icon: <Trash />,
         text: t('hpa.common.delete'),
         onClick: (_: any) => {
@@ -209,9 +212,10 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
             },
           },
         ]}
+        params={params}
         activeTab={nav}
         detail={detail}
-        authKey={authKey}
+        authKey={AUTH_KEY}
       />
       {nav === 'resource-status' && <ResourceStatus />}
       {nav === 'events' && <Events detail={detail} module="hpa" />}
