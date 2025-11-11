@@ -15,11 +15,20 @@ export const events = {
         context,
         'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
+      const vpaContext = get(
+        context,
+        'detail._originData.metadata.labels["vpa.autoscaling.kubesphere.io/managed"]',
+      );
 
-      const disabled = kedaContext === 'true' || kedaContext === true;
+      const disabled =
+        kedaContext === 'true' ||
+        kedaContext === true ||
+        vpaContext === 'true' ||
+        vpaContext === true;
       return {
         ...point,
         disabled,
+        disabledMessage: t('hpa.disabled.tooltip'),
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <HpaIcon />,
       };
@@ -32,10 +41,20 @@ export const events = {
         context,
         'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
-      const disabled = kedaContext === 'true' || kedaContext === true;
+      const vpaContext = get(
+        context,
+        'detail._originData.metadata.labels["vpa.autoscaling.kubesphere.io/managed"]',
+      );
+
+      const disabled =
+        kedaContext === 'true' ||
+        kedaContext === true ||
+        vpaContext === 'true' ||
+        vpaContext === true;
       return {
         ...point,
         disabled,
+        disabledMessage: t('hpa.disabled.tooltip'),
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <HpaIcon />,
       };
@@ -45,10 +64,20 @@ export const events = {
         context,
         'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
-      const disabled = kedaContext === 'true' || kedaContext === true;
+      const vpaContext = get(
+        context,
+        'detail._originData.metadata.labels["vpa.autoscaling.kubesphere.io/managed"]',
+      );
+
+      const disabled =
+        kedaContext === 'true' ||
+        kedaContext === true ||
+        vpaContext === 'true' ||
+        vpaContext === true;
       return {
         ...point,
         disabled,
+        disabledMessage: t('hpa.disabled.tooltip'),
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <HpaIcon />,
       };
@@ -58,10 +87,20 @@ export const events = {
         context,
         'detail._originData.metadata.labels["keda.autoscaling.kubesphere.io/managed"]',
       );
-      const disabled = kedaContext === 'true' || kedaContext === true;
+      const vpaContext = get(
+        context,
+        'detail._originData.metadata.labels["vpa.autoscaling.kubesphere.io/managed"]',
+      );
+
+      const disabled =
+        kedaContext === 'true' ||
+        kedaContext === true ||
+        vpaContext === 'true' ||
+        vpaContext === true;
       return {
         ...point,
         disabled,
+        disabledMessage: t('hpa.disabled.tooltip'),
         show: hasClusterModule(context?.detail.cluster, 'metrics-server'),
         icon: <HpaIcon />,
       };
