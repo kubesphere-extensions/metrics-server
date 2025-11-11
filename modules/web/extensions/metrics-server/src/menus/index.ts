@@ -2,7 +2,6 @@ export const menus = [
   {
     parent: 'pageNav.workspace.workloads.deployments-detail',
     name: 'metrics-server',
-    clusterModule: 'metrics-server',
     title: 'hpa.title',
     order: 5,
     actionType: 'modal',
@@ -11,7 +10,6 @@ export const menus = [
   {
     parent: 'pageNav.workspace.workloads.statefulsets-detail',
     name: 'metrics-server',
-    clusterModule: 'metrics-server',
     title: 'hpa.title',
     order: 5,
     actionType: 'modal',
@@ -20,8 +18,6 @@ export const menus = [
   {
     parent: 'pageNav.cluster.deployments.detail',
     name: 'metrics-server',
-    ksModule: 'metrics-server',
-    clusterModule: 'metrics-server',
     title: 'hpa.title',
     action: 'edit',
     order: 5,
@@ -31,7 +27,6 @@ export const menus = [
   {
     parent: 'pageNav.cluster.statefulsets.detail',
     name: 'metrics-server',
-    clusterModule: 'metrics-server',
     title: 'hpa.title',
     action: 'edit',
     order: 5,
@@ -58,14 +53,12 @@ export const menus = [
     parent: 'workspace.elastic_scaling',
     name: 'hpa-list',
     title: 'hpa.title',
-    authKey: 'metrics-server',
-    skipWorkspaceAuth: true,
+    workspaceModule: 'metrics-server',
   },
   {
     parent: 'cluster.elastic_scaling',
     name: 'hpa-list',
     title: 'hpa.title',
-    authKey: 'metrics-server',
-    skipWorkspaceAuth: true,
+    clusterModule: 'metrics-server',
   },
 ];
