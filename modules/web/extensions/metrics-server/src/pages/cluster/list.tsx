@@ -195,7 +195,7 @@ const ClusterHpaList = () => {
       cell: info => {
         return (
           <Avatar
-            to={`/clusters/${cluster}/projects/${info.row.original.namespace}/hpa-detail/${info.row.original.name}`}
+            to={`/clusters/${cluster}/projects/${info.row.original.namespace}/hpa-detail/${info.row.original.name}/resource-status`}
             icon={<HpaIcon />}
             title={<a>{getDisplayName(info.row.original)}</a>}
             description={info.row.original.description}

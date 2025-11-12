@@ -31,6 +31,9 @@ export const workspaceRoutes = [
           {
             path: `${PROJECT_PATH}/hpa-detail/:name`,
             element: <WorkspaceHpaDetail />,
+            handle: {
+              menuName: 'hpa-list',
+            },
             children: [
               {
                 index: true,
