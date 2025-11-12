@@ -3,7 +3,6 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { ModalProvider } from '@ks-console/shared';
 import { ClusterHpaList } from './list';
-// import { DetailLayout } from '../workspace/DetailLayout';
 import { ClusterHpaDetail } from './detail';
 import { ResourceStatus } from '../../components/ResourceStatus/ResourceStatus';
 import { Events } from '../../components/Events/Events';
@@ -25,26 +24,23 @@ export const clusterRoutes = [
         element: <ClusterHpaList />,
       },
       {
-        path: `${PROJECT_PATH}`,
-        element: <Outlet />,
+        path: `${PROJECT_PATH}/hpa-detail/:name`,
+        element: <ClusterHpaDetail />,
+        handle: {
+          menuName: 'hpa-list',
+        },
         children: [
           {
-            path: `${PROJECT_PATH}/hpa-detail/:name`,
-            element: <ClusterHpaDetail />,
-            children: [
-              {
-                index: true,
-                element: <Navigate to="resource-status" replace />,
-              },
-              {
-                path: `resource-status`,
-                element: <ResourceStatus />,
-              },
-              {
-                path: `events`,
-                element: <Events />,
-              },
-            ],
+            index: true,
+            element: <Navigate to="resource-status" replace />,
+          },
+          {
+            path: 'resource-status',
+            element: <ResourceStatus />,
+          },
+          {
+            path: 'events',
+            element: <Events />,
           },
         ],
       },
