@@ -6,6 +6,7 @@ export const FormContent = styled.div`
   border-radius: 4px;
   & .form-item-wrapper {
     margin-bottom: 0;
+    flex: 1;
   }
 `;
 
