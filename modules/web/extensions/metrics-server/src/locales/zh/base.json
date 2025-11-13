@@ -77,7 +77,7 @@
   "hpa.range": "副本数量范围",
   "hpa.desiredReplicas": "期望副本数",
   "hpa.minimumReplicas": "最小副本数",
-  "hpa.minimumReplicas.help": "设置允许的最小容器组副本数量，默认值为 0。",
+  "hpa.minimumReplicas.help": "设置允许的最小容器组副本数量，默认值为 1。",
   "hpa.maximumReplicas": "最大副本数",
   "hpa.maximumReplicas.help": "设置允许的最大容器组副本数量，默认值为 1。",
   "hpa.modal.create.title": "创建容器水平伸缩",
