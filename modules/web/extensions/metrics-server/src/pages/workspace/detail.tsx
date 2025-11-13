@@ -178,13 +178,13 @@ const WorkspaceHpaDetail = () => {
           icon: <HpaIcon />,
           attrs: getAttrs(),
           actions,
-          params: { cluster, workspace, namespace },
           actionOptions: { theme: 'dark' },
           breadcrumbs: {
             label: t('hpa.title'),
             url: `/workspaces/${workspace}/hpa-list`,
           },
         }}
+        params={{ cluster, workspace, namespace }}
       />
     </>
   );

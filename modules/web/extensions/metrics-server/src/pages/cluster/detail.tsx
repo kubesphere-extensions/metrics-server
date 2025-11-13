@@ -178,13 +178,13 @@ const ClusterHpaDetail = () => {
           icon: <HpaIcon />,
           attrs: getAttrs(),
           actions,
-          params: { cluster, namespace },
           actionOptions: { theme: 'dark' },
           breadcrumbs: {
             label: t('hpa.title'),
             url: `/clusters/${cluster}/hpa-list`,
           },
         }}
+        params={{ cluster, namespace }}
       />
     </>
   );
