@@ -77,7 +77,7 @@
   "hpa.range": "Rango de réplicas",
   "hpa.desiredReplicas": "Número de réplicas deseado",
   "hpa.minimumReplicas": "Mínimo de réplicas",
-  "hpa.minimumReplicas.help": "Establezca el número mínimo de réplicas de pods permitidas, con un valor predeterminado de 0.",
+  "hpa.minimumReplicas.help": "Establezca el número mínimo de réplicas de pods permitidas, con un valor predeterminado de 1.",
   "hpa.maximumReplicas": "Máximo de réplicas",
   "hpa.maximumReplicas.help": "Establezca el número máximo de réplicas de pods permitidas, con un valor predeterminado de 1.",
   "hpa.modal.create.title": "Crear escalado horizontal de Pod",

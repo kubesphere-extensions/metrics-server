@@ -87,7 +87,7 @@ export const HpaEditModal = (props: HpaFormModalProps) => {
               help={t('hpa.common.aliasName.help')}
               name={['metadata', 'annotations', 'kubesphere.io/alias-name']}
             >
-              <Input />
+              <Input maxLength={63} />
             </FormItem>
             <FormItem
               label={t('hpa.common.description')}
