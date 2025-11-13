@@ -30,7 +30,7 @@ interface WorkloadHpaDetailProps {
 
 export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
   const { params = {}, backTo } = props;
-  const { cluster, namespace, name, workspace: workspaceParams } = params;
+  const { cluster, namespace, name, workspace } = params;
   const { isLoading, refetch } = useHpaDetail(
     {
       cluster,
@@ -212,7 +212,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
             },
           },
         ]}
-        params={params}
+        params={{ cluster, namespace, workspace }}
         activeTab={nav}
         detail={detail}
         authKey={AUTH_KEY}
