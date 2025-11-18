@@ -1,6 +1,6 @@
 apiVersion: kubesphere.io/v1alpha1
 name: metrics-server
-version: 0.8.0-beta.1
+version: 0.8.0-rc.0
 displayName:
   zh: Metrics Server
   en: Metrics Server
@@ -54,6 +54,6 @@ dependencies:
 installationMode: Multicluster
 images:
   - docker.io/kubesphere/metrics-server:v0.8.0
-  - docker.io/kubesphere/metrics-server-frontend:main
-  - docker.io/kubesphere/ks-autoscaling-controller:v1.1.0-beta.1
+  - docker.io/kubesphere/metrics-server-frontend:v1.1.0-rc.0
+  - docker.io/kubesphere/ks-autoscaling-controller:v1.1.0-rc.0
 docs: https://docs.kubesphere.com.cn/
