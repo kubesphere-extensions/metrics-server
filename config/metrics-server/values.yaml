@@ -34,9 +34,9 @@ frontend:
   image:
     registry: docker.io
     repository: kubesphere/metrics-server-frontend
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"  
+    tag: "main@sha256:bacec0d03ad6715350349b78a8c3a5d5194590ba35a59c28cfe5d1480aaf2672"  
 
 ks-autoscaling-controller:
   nameOverride: "controller"
