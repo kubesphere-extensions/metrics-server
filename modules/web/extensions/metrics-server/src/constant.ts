@@ -27,6 +27,20 @@ const ICON_TYPES = {
 
 const AUTH_KEY = 'autoscaling';
 
+const HPA_READY_ANNOTATION_SELECTOR =
+  'metadata.annotations.hpa\\.autoscaling\\.kubesphere\\.io/ready';
+
+const HPA_STATUS_FILTERS = [
+  {
+    label: 'hpa.common.normal',
+    value: `${HPA_READY_ANNOTATION_SELECTOR}=true`,
+  },
+  {
+    label: 'hpa.common.abnormal',
+    value: `${HPA_READY_ANNOTATION_SELECTOR}=false`,
+  },
+];
+
 export {
   WORKLOAD_KIND_MAP,
   STATUS_TITLE,
@@ -34,4 +48,5 @@ export {
   ICON_TYPES,
   WORKLOAD_KIND_TEXT_MAP,
   AUTH_KEY,
+  HPA_STATUS_FILTERS,
 };
