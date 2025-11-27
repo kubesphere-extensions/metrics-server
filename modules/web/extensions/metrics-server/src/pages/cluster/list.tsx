@@ -31,7 +31,7 @@ import { HpaYamlModal } from '../../components/Modal/HpaYamlModal';
 import { useDelete } from '../../hooks/useDelete';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
-import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY } from '../../constant';
+import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY, HPA_STATUS_FILTERS } from '../../constant';
 const TableWrapper = styled.div`
   .table {
     width: 100%;
@@ -434,7 +434,20 @@ const ClusterHpaList = () => {
         }),
         filters: () => ({
           simpleMode: false,
-          suggestions: [],
+          suggestions: [
+            {
+              key: 'name',
+              label: t('hpa.common.name'),
+            },
+            {
+              key: 'fieldSelector',
+              label: t('hpa.common.status'),
+              options: HPA_STATUS_FILTERS.map(s => ({
+                label: t(s.label),
+                key: s.value,
+              })),
+            },
+          ],
         }),
         empty: () => {
           return {

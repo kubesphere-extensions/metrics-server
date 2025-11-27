@@ -33,7 +33,7 @@ import { useParams } from 'react-router-dom';
 import { get } from 'lodash';
 import { HpaScalerSettingModal } from '../../components/Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../../components/Icon/HpaIcon';
-import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY } from '../../constant';
+import { WORKLOAD_KIND_TEXT_MAP, AUTH_KEY, HPA_STATUS_FILTERS } from '../../constant';
 
 const TableWrapper = styled.div`
   .table {
@@ -471,6 +471,14 @@ export const WorkSpaceHpaList = () => {
               {
                 key: 'name',
                 label: t('hpa.common.name'),
+              },
+              {
+                key: 'fieldSelector',
+                label: t('hpa.common.status'),
+                options: HPA_STATUS_FILTERS.map(s => ({
+                  label: t(s.label),
+                  key: s.value,
+                })),
               },
             ],
           };

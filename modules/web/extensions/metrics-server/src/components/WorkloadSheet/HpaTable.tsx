@@ -31,7 +31,7 @@ import { get } from 'lodash';
 import { HpaYamlModal } from '../Modal/HpaYamlModal';
 import { HpaScalerSettingModal } from '../Modal/HpaScalerSettingModal/HpaScalerSettingModal';
 import { HpaIcon } from '../Icon/HpaIcon';
-import { AUTH_KEY } from '../../constant';
+import { AUTH_KEY, HPA_STATUS_FILTERS } from '../../constant';
 
 const Container = styled.div`
   table .table-cell {
@@ -485,7 +485,22 @@ export const HpaTable = (props: HpaTableProps) => {
                 key: 'name',
                 label: t('hpa.common.name'),
               },
+              {
+                key: 'fieldSelector',
+                label: t('hpa.common.status'),
+                options: HPA_STATUS_FILTERS.map(s => ({
+                  label: t(s.label),
+                  key: s.value,
+                })),
+              },
             ],
+          };
+        },
+        empty: () => {
+          return {
+            image: <HpaIcon size={48} />,
+            title: t('hpa.empty.title'),
+            description: t('hpa.empty.description'),
           };
         },
       },
@@ -500,23 +515,10 @@ export const HpaTable = (props: HpaTableProps) => {
     isFetched && (!query.page || query.page == 1) && !query.name && !data?.data?.length;
 
   return (
-    <>
-      {isEmpty ? (
-        <Card padding={32}>
-          <Empty
-            icon={<HpaIcon size={48} />}
-            title={t('hpa.empty.title')}
-            desc={t('hpa.empty.description')}
-            actions={renderTableAction()}
-          />
-        </Card>
-      ) : (
-        <Container>
-          <Card padding={0}>
-            <DataTable.DataTable table={table} />
-          </Card>
-        </Container>
-      )}
-    </>
+    <Container>
+      <Card padding={0}>
+        <DataTable.DataTable table={table} />
+      </Card>
+    </Container>
   );
 };
