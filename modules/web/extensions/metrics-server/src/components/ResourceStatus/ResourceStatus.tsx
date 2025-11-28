@@ -81,8 +81,10 @@ const ResourceStatus = () => {
     detail?.spec?.metrics,
     'cpu',
   );
-  const cpuTargetType: MetricTargetType =
-    (findTargetMetric(detail?.spec?.metrics, 'cpu')?.target?.type as MetricTargetType) || '';
+  const cpuTargetType: MetricTargetType = (type =>
+    type === 'Utilization' || type === 'AverageValue' ? type : '')(
+    findTargetMetric(detail?.spec?.metrics, 'cpu')?.target?.type,
+  );
 
   // Memory metrics: Use utility functions to get target and current values
   const memoryTargetValue = getTargetMetricValue(detail?.spec?.metrics, 'memory');
@@ -91,8 +93,10 @@ const ResourceStatus = () => {
     detail?.spec?.metrics,
     'memory',
   );
-  const memoryTargetType: MetricTargetType =
-    (findTargetMetric(detail?.spec?.metrics, 'memory')?.target?.type as MetricTargetType) || '';
+  const memoryTargetType: MetricTargetType = (type =>
+    type === 'Utilization' || type === 'AverageValue' ? type : '')(
+    findTargetMetric(detail?.spec?.metrics, 'memory')?.target?.type,
+  );
 
   return (
     <div>
