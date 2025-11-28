@@ -8,7 +8,7 @@ import {
 import { useQuery } from 'react-query';
 import { get } from 'lodash';
 
-import { findCurrentMetric, findTargetMetric } from '../utils';
+import { findTargetMetric, getTargetMetricValue, getCurrentMetricValue } from '../utils';
 interface Metric {
   type: string;
   resource: {
@@ -51,54 +51,24 @@ const mapper = (item: HpaItem) => {
   const spec = item.spec || { minReplicas: 0, maxReplicas: 0 };
   const { status } = item;
 
-  // Get Memory's configured type
-  const memoryMetric = findTargetMetric(spec?.metrics, 'memory');
-  const memoryTargetType = memoryMetric?.target?.type || '';
-
-  // Helper function: extract target metric value based on configured type
-  const getTargetValue = (metricName: string): string | number => {
-    const metric = findTargetMetric(spec?.metrics, metricName);
-    if (!metric?.target) return '';
-
-    // Prefer averageUtilization (percentage), otherwise return averageValue (absolute value)
-    return metric.target.averageUtilization ?? metric.target.averageValue ?? '';
-  };
-
-  // Helper function: extract current metric value based on configured type
-  // Prioritize value that matches the target type
-  const getCurrentValue = (metricName: string, targetType?: string): string | number => {
-    const metric = findCurrentMetric(status?.currentMetrics, metricName);
-    if (!metric) return 0;
-
-    // If target type is specified, prefer the corresponding type value
-    if (targetType === 'Utilization') {
-      return metric.averageUtilization ?? metric.averageValue ?? 0;
-    } else if (targetType === 'AverageValue') {
-      return metric.averageValue ?? metric.averageUtilization ?? 0;
-    }
-
-    // Default: prefer averageUtilization, otherwise return averageValue
-    return metric.averageUtilization ?? metric.averageValue ?? 0;
-  };
-
-  // Get CPU's configured type
-  const cpuMetric = findTargetMetric(spec?.metrics, 'cpu');
-  const cpuTargetType = cpuMetric?.target?.type || '';
+  // Get CPU and Memory target types
+  const cpuTargetType = findTargetMetric(spec?.metrics, 'cpu')?.target?.type || '';
+  const memoryTargetType = findTargetMetric(spec?.metrics, 'memory')?.target?.type || '';
 
   return {
     ...baseInfo,
     minReplicas: spec.minReplicas,
     maxReplicas: spec.maxReplicas,
     // CPU target value (could be percentage or absolute value)
-    cpuTargetUtilization: getTargetValue('cpu'),
+    cpuTargetUtilization: getTargetMetricValue(spec?.metrics, 'cpu') ?? '',
     cpuTargetType, // Add type information
     // Memory target value (could be percentage or absolute value)
-    memoryTargetValue: getTargetValue('memory'),
+    memoryTargetValue: getTargetMetricValue(spec?.metrics, 'memory') ?? '',
     memoryTargetType, // Add type information
     // CPU current value (prefer value that matches target type)
-    cpuCurrentUtilization: getCurrentValue('cpu', cpuTargetType),
+    cpuCurrentUtilization: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'cpu') ?? 0,
     // Memory current value (prefer value that matches target type)
-    memoryCurrentValue: getCurrentValue('memory', memoryTargetType),
+    memoryCurrentValue: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'memory') ?? 0,
     _originData: getOriginData(item),
   };
 };
