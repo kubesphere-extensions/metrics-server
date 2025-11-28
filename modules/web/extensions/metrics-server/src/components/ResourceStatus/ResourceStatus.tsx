@@ -13,7 +13,6 @@ import {
   Avatar,
   ReplicaCard,
   useCacheStore as useStore,
-  workloadStore,
   deploymentStore,
 } from '@ks-console/shared';
 import { StatusWrapper, CardItem, ScaleCard } from './styles';
@@ -26,7 +25,14 @@ import {
   WORKLOAD_KIND_TEXT_MAP,
 } from '../../constant';
 import { get } from 'lodash';
-import { findCurrentMetric, findTargetMetric, quantityToMi } from '../../utils';
+import {
+  findTargetMetric,
+  getTargetMetricValue,
+  getCurrentMetricValue,
+  formatCpuMetricValue,
+  formatMemoryMetricValue,
+  type MetricTargetType,
+} from '../../utils';
 import { CopyWarningDuotone } from '@kubed/icons';
 
 const STATUS_ICON = {
@@ -68,34 +74,29 @@ const ResourceStatus = () => {
             : 'True'
         : item.status,
   }));
-  const cpuTarget = findTargetMetric(detail?.spec?.metrics, 'cpu')?.target;
-  const cpuTargetValue = cpuTarget?.averageUtilization || cpuTarget?.averageValue;
-  const cpuCurrent = findCurrentMetric(detail?.status?.currentMetrics, 'cpu');
-  const cpuCurrentValue = cpuCurrent?.averageUtilization || cpuCurrent?.averageValue;
+  // CPU metrics: Use utility functions to get target and current values
+  const cpuTargetValue = getTargetMetricValue(detail?.spec?.metrics, 'cpu');
+  const cpuCurrentValue = getCurrentMetricValue(
+    detail?.status?.currentMetrics,
+    detail?.spec?.metrics,
+    'cpu',
+  );
+  const cpuTargetType: MetricTargetType = (type =>
+    type === 'Utilization' || type === 'AverageValue' ? type : '')(
+    findTargetMetric(detail?.spec?.metrics, 'cpu')?.target?.type,
+  );
 
-  const memoryTarget = findTargetMetric(detail?.spec?.metrics, 'memory')?.target;
-  const memoryTargetValue =
-    memoryTarget?.averageUtilization || quantityToMi(memoryTarget?.averageValue);
-
-  const memoryCurrent = findCurrentMetric(detail?.status?.currentMetrics, 'memory');
-  const memoryCurrentValue =
-    memoryCurrent?.averageUtilization || quantityToMi(memoryCurrent?.averageValue);
-
-  const memoryValueFormat = (value: number | Record<string, any>) => {
-    if (!value) return '-';
-    if (typeof value === 'number') {
-      return value + '%';
-    }
-    return value.stringValue;
-  };
-
-  const cpuValueFormat = (value: number | string | undefined) => {
-    if (!value) return '-';
-    if (typeof value === 'number') {
-      return value + '%';
-    }
-    return value;
-  };
+  // Memory metrics: Use utility functions to get target and current values
+  const memoryTargetValue = getTargetMetricValue(detail?.spec?.metrics, 'memory');
+  const memoryCurrentValue = getCurrentMetricValue(
+    detail?.status?.currentMetrics,
+    detail?.spec?.metrics,
+    'memory',
+  );
+  const memoryTargetType: MetricTargetType = (type =>
+    type === 'Utilization' || type === 'AverageValue' ? type : '')(
+    findTargetMetric(detail?.spec?.metrics, 'memory')?.target?.type,
+  );
 
   return (
     <div>
@@ -172,14 +173,14 @@ const ResourceStatus = () => {
             <CardItem>
               <Avatar
                 icon={<Cpu size={40} />}
-                title={`${cpuValueFormat(cpuTargetValue)} (${t('hpa.common.current')}: ${cpuValueFormat(cpuCurrentValue)})`}
+                title={`${formatCpuMetricValue(cpuTargetValue, cpuTargetType)} (${t('hpa.common.current')}: ${formatCpuMetricValue(cpuCurrentValue, cpuTargetType)})`}
                 description={t('hpa.targetCPUUsage')}
               ></Avatar>
             </CardItem>
             <CardItem>
               <Avatar
                 icon={<Memory size={40} />}
-                title={`${memoryValueFormat(memoryTargetValue)} (${t('hpa.common.current')}: ${memoryValueFormat(memoryCurrentValue)})`}
+                title={`${formatMemoryMetricValue(memoryTargetValue, memoryTargetType)} (${t('hpa.common.current')}: ${formatMemoryMetricValue(memoryCurrentValue, memoryTargetType)})`}
                 description={t('hpa.targetMemoryUsage')}
               ></Avatar>
             </CardItem>

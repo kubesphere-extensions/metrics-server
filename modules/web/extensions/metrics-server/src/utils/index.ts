@@ -268,17 +268,68 @@ export const findTargetMetric = (metrics?: Metric[], name?: string) =>
 export const findCurrentMetric = (metrics?: Metric[], name?: string) =>
   metrics?.find(m => m.type === 'Resource' && m.resource.name === name)?.resource?.current;
 
+/**
+ * Extract target metric value based on configured type
+ * @param metrics - Metrics array from spec
+ * @param metricName - Metric name ('cpu' or 'memory')
+ * @returns Target value (could be number for percentage or string for absolute value)
+ */
+export const getTargetMetricValue = (
+  metrics?: Metric[],
+  metricName?: string,
+): string | number | undefined => {
+  const metric = findTargetMetric(metrics, metricName);
+  if (!metric?.target) return undefined;
+
+  // Return averageUtilization (percentage) or averageValue (absolute value)
+  return metric.target.averageUtilization ?? metric.target.averageValue;
+};
+
+/**
+ * Extract current metric value based on target's configured type
+ * Prioritize value that matches the target type
+ * @param currentMetrics - Current metrics array from status
+ * @param targetMetrics - Target metrics array from spec
+ * @param metricName - Metric name ('cpu' or 'memory')
+ * @returns Current value (type matches target type)
+ */
+export const getCurrentMetricValue = (
+  currentMetrics?: Metric[],
+  targetMetrics?: Metric[],
+  metricName?: string,
+): string | number | undefined => {
+  const metric = findCurrentMetric(currentMetrics, metricName);
+  if (!metric) return undefined;
+
+  // Get target type to determine which current value to use
+  const targetMetric = findTargetMetric(targetMetrics, metricName);
+  const targetType = targetMetric?.target?.type;
+
+  // If target type is Utilization, prefer averageUtilization
+  if (targetType === 'Utilization') {
+    return metric.averageUtilization ?? metric.averageValue;
+  }
+
+  // If target type is AverageValue, prefer averageValue
+  if (targetType === 'AverageValue') {
+    return metric.averageValue ?? metric.averageUtilization;
+  }
+
+  // Default: prefer averageUtilization
+  return metric.averageUtilization ?? metric.averageValue;
+};
+
 // ============================================================================
 // HPA Metrics Formatting Utility Functions
 // ============================================================================
 
-type MetricTargetType = 'Utilization' | 'AverageValue' | '';
+export type MetricTargetType = 'Utilization' | 'AverageValue' | '';
 
 /**
  * Format CPU metric value
  * Display format is determined by the type configured in spec.metrics
  *
- * @param value - CPU value (could be number or string)
+ * @param value - CPU value (could be number, string, or undefined)
  * @param targetType - Configured target type ('Utilization' or 'AverageValue')
  * @returns Formatted display string
  *
@@ -286,10 +337,10 @@ type MetricTargetType = 'Utilization' | 'AverageValue' | '';
  * formatCpuMetricValue(80, 'Utilization')        // => "80%"
  * formatCpuMetricValue("100m", 'AverageValue')   // => "100m"
  * formatCpuMetricValue(0, 'Utilization')         // => "0%"
- * formatCpuMetricValue('', '')                   // => "--"
+ * formatCpuMetricValue(undefined, '')            // => "--"
  */
 export const formatCpuMetricValue = (
-  value: string | number,
+  value: string | number | undefined,
   targetType: MetricTargetType,
 ): string => {
   // Handle empty values (note that 0 is a valid value)
@@ -313,7 +364,7 @@ export const formatCpuMetricValue = (
  * Format Memory metric value
  * Display format is determined by the type configured in spec.metrics
  *
- * @param value - Memory value (could be number or string)
+ * @param value - Memory value (could be number, string, or undefined)
  * @param targetType - Configured target type ('Utilization' or 'AverageValue')
  * @returns Formatted display string
  *
@@ -322,10 +373,10 @@ export const formatCpuMetricValue = (
  * formatMemoryMetricValue("1Gi", 'AverageValue') // => "1024Mi"
  * formatMemoryMetricValue("1024", 'AverageValue')// => "0.98Mi"
  * formatMemoryMetricValue(75, 'AverageValue')    // => "71.53Mi" (fallback value also converted)
- * formatMemoryMetricValue('', '')                // => "--"
+ * formatMemoryMetricValue(undefined, '')         // => "--"
  */
 export const formatMemoryMetricValue = (
-  value: string | number,
+  value: string | number | undefined,
   targetType: MetricTargetType,
 ): string => {
   // Handle empty values (note that 0 is a valid value)
