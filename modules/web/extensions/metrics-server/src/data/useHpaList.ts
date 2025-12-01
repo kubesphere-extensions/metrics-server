@@ -60,15 +60,15 @@ const mapper = (item: HpaItem) => {
     minReplicas: spec.minReplicas,
     maxReplicas: spec.maxReplicas,
     // CPU target value (could be percentage or absolute value)
-    cpuTargetUtilization: getTargetMetricValue(spec?.metrics, 'cpu') ?? '',
+    cpuTargetUtilization: getTargetMetricValue(spec?.metrics, 'cpu'),
     cpuTargetType, // Add type information
     // Memory target value (could be percentage or absolute value)
-    memoryTargetValue: getTargetMetricValue(spec?.metrics, 'memory') ?? '',
+    memoryTargetValue: getTargetMetricValue(spec?.metrics, 'memory'),
     memoryTargetType, // Add type information
     // CPU current value (prefer value that matches target type)
-    cpuCurrentUtilization: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'cpu') ?? 0,
+    cpuCurrentUtilization: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'cpu'),
     // Memory current value (prefer value that matches target type)
-    memoryCurrentValue: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'memory') ?? 0,
+    memoryCurrentValue: getCurrentMetricValue(status?.currentMetrics, spec?.metrics, 'memory'),
     _originData: getOriginData(item),
   };
 };
