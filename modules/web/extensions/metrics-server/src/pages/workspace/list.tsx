@@ -14,6 +14,8 @@ import {
   EventsSheet,
   IHpaDetail,
   PageLayout,
+  FormattedCluster,
+  hasClusterModule,
 } from '@ks-console/shared';
 import { Card, DataTable, Field } from '@kubed/components';
 import { Pen, Trash, Role } from '@kubed/icons';
@@ -64,13 +66,23 @@ const useSteps = (steps: number[]) => {
   };
 };
 
+const mapCluster = (cluster: FormattedCluster) => {
+  return {
+    ...cluster,
+    isReady: cluster.isReady && hasClusterModule(cluster.name, 'metrics-server'),
+  };
+};
+
 export const WorkSpaceHpaList = () => {
   const { workspace } = useParams<BasePathParams>();
   const { state, setState } = useUrlSearchParamsStatus([]);
-  const { params: namespaceParams, render: renderSelect } = useWorkspaceProjectSelect({
-    workspace,
-    showAll: false,
-  });
+  const { params: namespaceParams, render: renderSelect } = useWorkspaceProjectSelect(
+    {
+      workspace,
+      showAll: false,
+    },
+    list => (list as FormattedCluster[]).map(mapCluster),
+  );
 
   const useHpaStore = createHpaStore();
 
