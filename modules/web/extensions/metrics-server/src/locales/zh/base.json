@@ -1,4 +1,5 @@
 {
+  "hpa.disabled.fedManagedSelectTooltip": "无法在集群管理内创建联邦项目的资源, 请到联邦项目页面内进行操作。",
   "hpa.disabled.tooltip": "每个工作负载仅支持绑定同一种弹性伸缩策略。",
   "hpa.menu.parent.title": "弹性伸缩",
   "hpa.validation.name.required": "请输入名称",
