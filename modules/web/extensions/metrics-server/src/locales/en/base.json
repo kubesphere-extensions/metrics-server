@@ -1,4 +1,5 @@
 {
+  "hpa.disabled.fedManagedSelectTooltip": "Cannot create resources for federal projects in cluster management, please go to the federal project page for operations.",
   "hpa.disabled.tooltip": "Each workload only supports binding to the same type of elastic scaling policy.",
   "hpa.menu.parent.title": "Elastic Scaling",
   "hpa.validation.name.required": "Please enter a name",

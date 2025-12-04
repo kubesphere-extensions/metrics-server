@@ -3,11 +3,12 @@ import { Form, FormItem, Input, Textarea, useForm, Row, Col, Button } from '@kub
 import { Pen, Trash, Backup } from '@kubed/icons';
 import styled from 'styled-components';
 import { useHpaContext } from '../../../contexts/HpaContext';
-import { NamespaceSelector, getLocalTime } from '@ks-console/shared';
+import { getLocalTime } from '@ks-console/shared';
 import { WorkloadAddCard } from '../../WorkloadAddCard/WorkloadAddCard';
 import { isEmpty } from 'lodash';
 import { WorkloadStatus } from '../../WorkloadStatus/WorkloadStatus';
 import { WORKLOAD_KIND_MAP } from '../../../constant';
+import { NamespaceSelector } from '../../NamespaceSelector';
 
 type BaseInfoFormProps = {
   onOk?: () => void;
