@@ -43,3 +43,11 @@ export const ToolTipTitle = styled.div`
   margin-bottom: 8px;
   margin-top: 8px;
 `;
+
+export const StatusDotContainer = styled.div`
+  span[color='success'] {
+    &::before {
+      background-color: #329dce;
+    }
+  }
+`;
