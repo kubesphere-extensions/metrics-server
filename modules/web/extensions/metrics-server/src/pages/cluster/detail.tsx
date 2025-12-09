@@ -59,6 +59,7 @@ const ClusterHpaDetail = () => {
         label: t('hpa.common.status'),
         value: (
           <HpaStatus
+            ready={detail?.metadata?.annotations?.['hpa.autoscaling.kubesphere.io/ready']}
             onClick={() => openEvents({ detail, headerTitle: t('hpa.common.viewEvents') })}
             status={detail.status}
           />

@@ -17,7 +17,6 @@ import { Pen, Trash } from '@kubed/icons';
 import { ColumnDef, Table } from '@tanstack/react-table';
 import * as React from 'react';
 import styled from 'styled-components';
-import { Empty } from '../Empty/Empty';
 import { HpaCreateModal } from '../Modal/HpaCreateModal/HpaCreateModal';
 
 import { HpaStatus } from '../HpaStatus/HpaStatus';
@@ -105,7 +104,7 @@ export const HpaTable = (props: HpaTableProps) => {
   }, [state, cluster, namespace, kind, name]);
 
   const { step, nextStep } = useSteps(steps);
-  const { data, isLoading, isFetching, isFetched, refetch } = useHpaList(query, {
+  const { data, isLoading, isFetching, refetch } = useHpaList(query, {
     enabled: !!cluster && !!namespace && !!kind && !!name,
     refetchInterval: step * 1000,
     onSettled: () => {
@@ -329,6 +328,7 @@ export const HpaTable = (props: HpaTableProps) => {
         enableHiding: true,
         cell: info => (
           <HpaStatus
+            ready={info.row.original.metadata?.annotations?.['hpa.autoscaling.kubesphere.io/ready']}
             onClick={() => {
               openEvents({ detail: info.row.original, headerTitle: t('hpa.common.viewEvents') });
             }}
@@ -510,9 +510,6 @@ export const HpaTable = (props: HpaTableProps) => {
   React.useEffect(() => {
     tableRef.current = table;
   }, []);
-
-  const isEmpty =
-    isFetched && (!query.page || query.page == 1) && !query.name && !data?.data?.length;
 
   return (
     <Container>

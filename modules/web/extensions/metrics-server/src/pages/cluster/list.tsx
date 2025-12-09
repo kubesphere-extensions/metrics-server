@@ -213,6 +213,7 @@ const ClusterHpaList = () => {
       enableHiding: true,
       cell: info => (
         <HpaStatus
+          ready={info.row.original.metadata?.annotations?.['hpa.autoscaling.kubesphere.io/ready']}
           onClick={() =>
             openEvents({ detail: info.row.original, headerTitle: t('hpa.common.viewEvents') })
           }

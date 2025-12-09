@@ -83,6 +83,7 @@ export const WorkloadHpaDetail = (props: WorkloadHpaDetailProps) => {
         label: t('hpa.common.status'),
         value: (
           <HpaStatus
+            ready={detail?.metadata?.annotations?.['hpa.autoscaling.kubesphere.io/ready']}
             status={detail?.status}
             onClick={() => {
               open({ detail, headerTitle: t('hpa.title') });
