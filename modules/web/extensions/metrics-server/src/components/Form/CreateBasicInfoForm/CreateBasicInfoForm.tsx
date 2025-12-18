@@ -53,6 +53,26 @@ const BaseForm = ({ onOk, onWorkloadAdd }: BaseInfoFormProps, ref: any) => {
   });
 
   const { cluster, workspace } = extraParams;
+
+  const handleNamespaceChange = (namespace: string) => {
+    if (namespace !== hpaData?.metadata?.namespace) {
+      updateSelectWorkload(null);
+      updateHpaData({
+        metadata: {
+          ownerReferences: [],
+        },
+        spec: {
+          scaleTargetRef: {
+            apiVersion: 'apps/v1',
+            kind: '',
+            name: '',
+          },
+        },
+      });
+      form.setFieldValue(['spec', 'scaleTargetRef', 'name'], '');
+    }
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <Form
@@ -104,7 +124,7 @@ const BaseForm = ({ onOk, onWorkloadAdd }: BaseInfoFormProps, ref: any) => {
                 help={t('hpa.common.project.help')}
                 rules={[{ required: true, message: t('hpa.validation.namespace.required') }]}
               >
-                <NamespaceSelector cluster={cluster}></NamespaceSelector>
+                <NamespaceSelector cluster={cluster} onNamespaceChange={handleNamespaceChange} />
               </FormItem>
             </GridItem>
           ) : null}

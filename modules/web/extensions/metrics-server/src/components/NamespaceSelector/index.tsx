@@ -17,10 +17,18 @@ interface Params {
   workspace?: string;
   value?: string;
   onChange?: (name: string) => void;
+  onNamespaceChange?: (name: string) => void;
   style?: CSSProperties;
 }
 
-const NamespaceSelector = ({ cluster, workspace, onChange, style, value }: Params) => {
+const NamespaceSelector = ({
+  cluster,
+  workspace,
+  onChange,
+  onNamespaceChange,
+  style,
+  value,
+}: Params) => {
   const [search, setSearch] = useState('');
   const onSearch = debounce((val: string) => setSearch(val), 500);
   const {
@@ -51,9 +59,13 @@ const NamespaceSelector = ({ cluster, workspace, onChange, style, value }: Param
     }
   };
 
-  const handleProjectChange = useCallback((namespace: string) => {
-    onChange?.(namespace);
-  }, []);
+  const handleProjectChange = useCallback(
+    (namespace: string) => {
+      onChange?.(namespace);
+      onNamespaceChange?.(namespace);
+    },
+    [onChange, onNamespaceChange],
+  );
 
   const Option = Select.Option;
   return (
