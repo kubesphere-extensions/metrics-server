@@ -58,7 +58,7 @@ const WorkloadForm = ({
       namespace: hpaData?.metadata?.namespace || extraParams.namespace,
       module: value as 'deployments' | 'statefulsets',
       query: {
-        sortBy: 'updateTime',
+        sortBy: 'createTime',
         limit: 10,
         name,
       },
