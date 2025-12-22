@@ -1,0 +1,53 @@
+name: Sync Extensions
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  sync-extensions:
+    runs-on: self-runner-extensions
+    env:
+      EXTENSION: ${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: |
+          git config --global user.email "ci-bot@kubesphere.io"
+          git config --global user.name "ks-ci-bot"
+          git config --global url."https://x-access-token:${{ secrets.CIBOT_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+          COMMIT_SUBJECT="$(git log -1 --pretty=%s)"
+          echo "COMMIT_SUBJECT=$COMMIT_SUBJECT" >> "$GITHUB_ENV"
+
+          git clone --depth 1 https://x-access-token:${{ secrets.CIBOT_ACCESS_TOKEN }}@github.com/ks-ci-bot/kse-extensions.git -b main
+          pushd kse-extensions
+          git remote add upstream https://github.com/kubesphere-extensions/kse-extensions.git
+          git fetch upstream main
+          git checkout -B sync/${EXTENSION} upstream/main
+          popd
+
+          rm -rf kse-extensions/${EXTENSION}
+          mkdir -p kse-extensions/${EXTENSION}
+          cp -R config/${EXTENSION}/. kse-extensions/${EXTENSION}/
+
+          pushd kse-extensions
+          git add .
+          git commit -m "[${EXTENSION}] ${COMMIT_SUBJECT}"
+          git push origin sync/${EXTENSION} --force
+
+      - env:
+          GH_TOKEN: ${{ secrets.CIBOT_ACCESS_TOKEN }}
+        run: |
+          pushd kse-extensions
+          if [[ -z "$(gh pr ls -R kubesphere-extensions/kse-extensions -A ks-ci-bot -H sync/${EXTENSION} -B main)" ]]; then
+            gh pr create -R kubesphere-extensions/kse-extensions \
+              -B main \
+              -H ks-ci-bot:sync/${EXTENSION} \
+              -t "[${EXTENSION}] ${COMMIT_SUBJECT}" \
+              -b "[${EXTENSION}] ${COMMIT_SUBJECT}"
+          fi
