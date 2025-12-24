@@ -100,35 +100,37 @@ const ResourceStatus = () => {
 
   return (
     <div>
-      <Card sectionTitle={t('hpa.common.statusInformation')}>
-        <StatusWrapper>
-          {finalConditions.map((item: any) => (
-            <CardItem key={item.type}>
-              <Avatar
-                icon={
-                  <div style={{ width: 40, height: 40, position: 'relative' }}>
-                    {STATUS_ICON[item.type as keyof typeof STATUS_ICON]}
-                    <Icon
-                      name={ICON_TYPES[item.statusForShow as keyof typeof ICON_TYPES].name}
-                      size={16}
-                      color="#fff"
-                      style={{
-                        fill: ICON_TYPES[item.statusForShow as keyof typeof ICON_TYPES].color,
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                      }}
-                    />
-                  </div>
-                }
-                title={t(STATUS_TITLE[item.type as keyof typeof STATUS_TITLE])}
-                description={t(STATUS_DESCRIPTION[item.type as keyof typeof STATUS_DESCRIPTION])}
-              />
-            </CardItem>
-          ))}
-        </StatusWrapper>
-      </Card>
-      <Card sectionTitle={t('hpa.scaleTarget')}>
+      {finalConditions.length ? (
+        <Card sectionTitle={t('hpa.common.statusInformation')}>
+          <StatusWrapper>
+            {finalConditions.map((item: any) => (
+              <CardItem key={item.type}>
+                <Avatar
+                  icon={
+                    <div style={{ width: 40, height: 40, position: 'relative' }}>
+                      {STATUS_ICON[item.type as keyof typeof STATUS_ICON]}
+                      <Icon
+                        name={ICON_TYPES[item.statusForShow as keyof typeof ICON_TYPES].name}
+                        size={16}
+                        color="#fff"
+                        style={{
+                          fill: ICON_TYPES[item.statusForShow as keyof typeof ICON_TYPES].color,
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 0,
+                        }}
+                      />
+                    </div>
+                  }
+                  title={t(STATUS_TITLE[item.type as keyof typeof STATUS_TITLE])}
+                  description={t(STATUS_DESCRIPTION[item.type as keyof typeof STATUS_DESCRIPTION])}
+                />
+              </CardItem>
+            ))}
+          </StatusWrapper>
+        </Card>
+      ) : null}
+      <Card style={{ marginTop: 8 }} sectionTitle={t('hpa.scaleTarget')}>
         <Avatar
           icon={<Backup size={40}></Backup>}
           title={get(detail, 'spec.scaleTargetRef.name', '')}
