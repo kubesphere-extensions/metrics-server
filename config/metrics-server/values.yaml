@@ -26,6 +26,10 @@ metrics-server:
       cpu: 100m
       memory: 200Mi
 
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
   addonResizer:
     enabled: false
 
@@ -35,7 +39,19 @@ frontend:
     registry: docker.io
     repository: kubesphere/metrics-server-frontend
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v1.1.0-rc.2"  
+    # tag: "v1.1.0"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 
 ks-autoscaling-controller:
   nameOverride: "controller"
@@ -46,7 +62,7 @@ ks-autoscaling-controller:
     registry: docker.io
     repository: kubesphere/ks-autoscaling-controller
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v1.1.0-rc.1"
+    # tag: "v1.1.0"
 
   resources:
     limits:
